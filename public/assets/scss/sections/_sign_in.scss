@@ -1,0 +1,58 @@
+.sign-in-modal {
+    .modal-content {
+      background-color: var(--surface-color, #ffffff);
+      color: var(--text-color, #333333);
+    }
+  
+    .modal-header {
+      border-bottom: 1px solid var(--border-color, rgba(0, 0, 0, 0.1));
+      
+      .modal-title {
+        font-weight: bold;
+      }
+    }
+  
+    .modal-body {
+      padding: 2rem;
+    }
+  
+    .form-label {
+      font-weight: 500;
+    }
+  
+    .form-control {
+      border: 1px solid var(--border-color, rgba(0, 0, 0, 0.1));
+      &:focus {
+        box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+        border-color: #80bdff;
+      }
+    }
+  
+    .btn-primary {
+      background-color: var(--primary-color, #007bff);
+      border-color: var(--primary-color, #007bff);
+      &:hover {
+        background-color: darken(#007bff, 10%);
+        border-color: darken(#007bff, 10%);
+      }
+    }
+  
+    a {
+      color: var(--link-color, #007bff);
+      text-decoration: none;
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+  
+  @media (max-width: 576px) {
+    .sign-in-modal {
+      .modal-dialog {
+        margin: 0.5rem;
+      }
+      .modal-body {
+        padding: 1rem;
+      }
+    }
+  }

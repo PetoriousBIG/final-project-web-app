@@ -11,3 +11,13 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+:root {
+  --default-color: #212529;
+  --accent-color: #ce1212;
+  --background-color: #ffffff;
+  --heading-color: #37373f;
+  --nav-color: #37373f;
+  --nav-hover-color: #ce1212;
+  --nav-font: 'Open Sans', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', 'Liberation Sans', sans-serif;
+}

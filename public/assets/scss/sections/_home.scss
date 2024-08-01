@@ -1,0 +1,93 @@
+// main: ../main.scss
+/*--------------------------------------------------------------
+# Home Section
+--------------------------------------------------------------*/
+.home {
+  width: 100%;
+  min-height: 100vh;
+  position: relative;
+  padding: 80px 0;
+  display: flex;
+  align-items: flex-start;
+  /* Adjusted to move content up */
+  justify-content: center;
+  color: var(--default-color);
+
+  img {
+    position: absolute;
+    inset: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 1;
+  }
+
+  &:before {
+    content: "";
+    background: color-mix(in srgb, var(--background-color), transparent 50%);
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+  }
+
+  .container {
+    position: relative;
+    z-index: 3;
+    margin-top: 50px;
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+  h2 {
+    margin: 0;
+    font-size: 48px;
+    font-weight: 700;
+
+    span {
+      color: var(--accent-color);
+    }
+  }
+
+  p {
+    color: color-mix(in srgb, var(--default-color), transparent 20%);
+    margin: 20px 0 0 0;
+    font-size: 30px;
+  }
+
+  .content {
+    margin-top: 5px;
+
+    h3 {
+      font-size: 1.75rem;
+      font-weight: 700;
+    }
+
+    .fst-italic {
+      color: color-mix(in srgb, var(--default-color), var(--contrast-color) 50%);
+      font-size: 1rem;
+      margin-bottom: 20px;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+
+      li {
+        padding: 10px 0;
+        display: flex;
+      }
+
+      i {
+        color: var(--accent-color);
+        margin-right: 0.5rem;
+        line-height: 1.2;
+        font-size: 1.25rem;
+      }
+    }
+
+    p:last-child {
+      margin-bottom: 0;
+    }
+  }
+}
