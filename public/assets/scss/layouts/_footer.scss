@@ -1,0 +1,39 @@
+// main: ../main.scss
+/*--------------------------------------------------------------
+# Global Footer
+--------------------------------------------------------------*/
+.footer {
+  color: var(--default-color);
+  background-color: var(--background-color);
+  font-size: 14px;
+  padding: 30px 0;
+  /* Adjust padding for better spacing */
+  text-align: center;
+
+  /* Center-align text */
+  .logo {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+
+    .sitename {
+      font-size: 26px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      font-family: var(--heading-font);
+      color: var(--heading-color);
+    }
+  }
+
+  .copyright {
+    border-top: 1px solid color-mix(in srgb, var(--default-color), transparent 90%);
+    padding-top: 15px;
+
+    p {
+      margin-bottom: 0;
+      font-size: 14px;
+      font-family: var(--heading-font);
+    }
+  }
+}

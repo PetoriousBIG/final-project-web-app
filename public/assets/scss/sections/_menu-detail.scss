@@ -1,0 +1,136 @@
+.menu-detail {
+  .menu-carousel {
+    position: relative;
+    height: 300px; /* Set fixed height */
+
+    .swiper-wrapper {
+      img {
+        width: 100%;
+        height: 100%; /* Fill the fixed height */
+        object-fit: cover; /* Ensures images cover the box without distortion */
+      }
+    }
+
+    .swiper-pagination {
+      position: absolute;
+      bottom: 10px;
+      text-align: center;
+      width: 100%;
+    }
+
+    .swiper-button-next,
+    .swiper-button-prev {
+      color: #fff; 
+    }
+  }
+
+  .chef-info {
+    padding: 20px;
+    background: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    height: 300px; 
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    .chef-img {
+      width: 100px;
+      height: 100px;
+      border-radius: 100%;
+      margin-bottom: 10px;
+    }
+
+    h3, p {
+      color: rgb(68, 121, 121);
+      margin: 10px 0;
+    }
+
+    .btn-primary {
+      margin-top: auto;
+      background-color: var(--accent-color);
+      color: var(--contrast-color);
+      border: none;
+      padding: 10px 20px;
+      font-size: 16px;
+      font-weight: bold;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+  }
+
+  .comments-section {
+    margin-top: 40px;
+
+    .d-flex {
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .comments-count {
+      font-weight: bold;
+    }
+
+    .btn-primary {
+      border-radius: 4px;
+      padding: 10px 20px;
+      border: 0;
+      background-color: var(--accent-color);
+      color: var(--contrast-color);
+
+      &:hover {
+        color: var(--contrast-color);
+        background-color: color-mix(in srgb, var(--accent-color), transparent 20%);
+      }
+    }
+
+    .comment {
+      margin-top: 30px;
+      position: relative;
+
+      .comment-img {
+        margin-right: 14px;
+
+        img {
+          width: 60px;
+        }
+      }
+
+      h5 {
+        font-size: 16px;
+        margin-bottom: 2px;
+
+        span {
+          color: var(--accent-color);
+          margin-right: 10px;
+        }
+
+        .btn-reply {
+          border: none;
+          background: none;
+          color: var(--accent-color);
+          cursor: pointer;
+          font-size: 14px;
+          font-weight: bold;
+          display: inline-flex;
+          align-items: center;
+
+          i {
+            margin-right: 4px;
+          }
+
+          &:hover {
+            color: color-mix(in srgb, var(--accent-color), transparent 20%);
+          }
+        }
+      }
+
+      time {
+        font-style: italic;
+        color: #aaa;
+      }
+    }
+  }
+}
