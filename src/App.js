@@ -1,5 +1,8 @@
 import React, { useEffect } from 'react';
 import { Route, Routes } from 'react-router-dom';
+import { Provider } from "react-redux";
+import store from "./store";
+import Session from './components/Account/Session';
 import Home from './components/Home/Home';
 import Recipes from './components/Recipes/Recipes';
 import Restaurants from './components/Restaurants/Restaurants';
@@ -20,17 +23,21 @@ function App() {
   }, []);
 
   return (
-    <div>
-      <Header /> 
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/recipes" element={<Recipes />} />
-        <Route path="/restaurants" element={<Restaurants />} />
-        <Route path="/restaurant/:id" element={<RestaurantDetail />} /> 
-        <Route path="/menu" element={<Menu />} />
-        <Route path="/menu/:id" element={<MenuDetail />} /> 
-      </Routes>
-    </div>
+    <Provider store={store}>
+      <Session>
+        <div>
+          <Header /> 
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/recipes" element={<Recipes />} />
+            <Route path="/restaurants" element={<Restaurants />} />
+            <Route path="/restaurant/:id" element={<RestaurantDetail />} /> 
+            <Route path="/menu" element={<Menu />} />
+            <Route path="/menu/:id" element={<MenuDetail />} /> 
+          </Routes>
+        </div>
+      </Session>
+    </Provider>
   );
 }
 

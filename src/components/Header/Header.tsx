@@ -1,11 +1,19 @@
 import React, { useState } from 'react';
-import SignIn from '../SignIn/SignIn';
-
+import SignIn from '../Account/SignIn/SignIn';
+import { useSelector, useDispatch } from "react-redux";
+import * as client from "../Account/client";
+import { setCurrentUser } from '../Account/reducer';
 function Header() {
+  const { currentUser } = useSelector((state: any) => state.accountReducer);
   const [showSignIn, setShowSignIn] = useState(false);
-
+  const dispatch = useDispatch();
   const handleShowSignIn = () => setShowSignIn(true);
   const handleCloseSignIn = () => setShowSignIn(false);
+
+  const handlesSignOut = async () => {
+    await client.signout();
+    dispatch(setCurrentUser(null));
+  }
 
   return (
     <header id="header" className="header fixed-top">
@@ -23,21 +31,31 @@ function Header() {
             <i className="mobile-nav-toggle d-xl-none bi bi-list" />
           </nav>
           <div className="button-container d-flex">
-            <a
-              className="btn-border-text d-none d-xl-block"
-              href="#sign-in"
-              onClick={(e) => {
-                e.preventDefault();
-                handleShowSignIn();
-              }}
-            >
-              Sign In
-            </a>
+            { currentUser === null ?
+              <a
+                className="btn-border-text d-none d-xl-block"
+                href="#sign-in"
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleShowSignIn();
+                }}
+              >
+                Sign In
+              </a> 
+              :
+              <button
+                className="btn-border-text d-none d-xl-block"
+                style={{backgroundColor: "transparent"}}
+                onClick={handlesSignOut}
+              >
+                Sign Out
+              </button>
+            }
             <a className="btn-border-text d-none d-xl-block" href="#profile">Profile</a>
           </div>
         </div>
       </div>
-      <SignIn show={showSignIn} handleClose={handleCloseSignIn} />
+      <SignIn show={showSignIn} handleClose={handleCloseSignIn}/> :
     </header>
   );
 }
