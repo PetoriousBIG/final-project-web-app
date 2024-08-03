@@ -12,7 +12,8 @@ function Register({ show, handleClose }) {
   const handleRegister = async () => {
       try {  
           const currentUser = await client.signup(user);
-          dispatch(setCurrentUser(currentUser));      
+          dispatch(setCurrentUser(currentUser));
+          handleClose()
       } catch (err: any) {
         setError(err.response.data.message);
       };
