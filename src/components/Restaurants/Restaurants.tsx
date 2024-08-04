@@ -8,6 +8,7 @@ function Restaurants() {
 
   const fetchRestaurants = async () => {
     const restaurants = await client.fetchAllRestaurants();
+    console.log(restaurants);
     dispatch(setRestaurants(restaurants));
   }
   useEffect(() => {
