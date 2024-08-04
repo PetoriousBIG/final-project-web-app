@@ -5,8 +5,8 @@ import { Navigation, Pagination } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
-import Review from '../Review/Review';
-import ReplyComment from '../Review/ReplyComment';
+import Review from '../../Review/Review';
+import ReplyComment from '../../Review/ReplyComment';
 
 function RestaurantDetail() {
   const { id } = useParams();
