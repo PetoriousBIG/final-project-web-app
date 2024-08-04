@@ -5,7 +5,7 @@ import store from "./store";
 import Session from './components/Account/Session';
 import Home from './components/Home/Home';
 import Recipes from './components/Recipes/Recipes';
-import Restaurants from './components/Restaurants/Restaurants';
+import Restaurants from './components/Restaurants/Resaurants';
 import RestaurantDetail from './components/Restaurants/RestaurantDetail'; 
 import Header from './components/Header/Header';  
 import AOS from 'aos';
