@@ -7,9 +7,12 @@ function Restaurants() {
   const dispatch = useDispatch()
 
   const fetchRestaurants = async () => {
-    const restaurants = await client.fetchAllRestaurants();
-    console.log(restaurants);
-    dispatch(setRestaurants(restaurants));
+      try {
+          const restaurants = await client.fetchAllRestaurants();
+          dispatch(setRestaurants(restaurants));
+      } catch ( err: any ) {
+          console.log(err)
+      }
   }
   useEffect(() => {
       fetchRestaurants();
