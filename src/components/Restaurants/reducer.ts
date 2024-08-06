@@ -15,8 +15,11 @@ const restaurantsSlice = createSlice({
                 _id: new Date().getTime().toString(),
                 name: restaurant.name,
                 descrption: restaurant.descrption,
-                rating: 0,
-                ratings: [{rating: Number, user_id: String}]
+                rating: restaurant.rating,
+                owner_id: restaurant.owner_id,
+                owner: restaurant.owner,
+                introduction: restaurant.introduction,
+                images: restaurant.images
             };
             state.restaurants = [...state.restaurants, newRestaurant] as any;
         },
