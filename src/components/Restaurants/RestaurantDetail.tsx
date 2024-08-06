@@ -56,7 +56,7 @@ function RestaurantDetail() {
       <div id={`comment-${comment._id}`} className="comment" key={comment._id}>
         <div className="d-flex">
           <div className="comment-img">
-            <img src={`assets/img/comments/comments-${comment._id}.jpg`} alt={`Commenter ${comment._id}`} />
+            <img src={`${process.env.PUBLIC_URL}/assets/img/profiles/generic-profile.png`} alt={`Commenter ${comment._id}`} />
           </div>
           <div>
             <h5>
