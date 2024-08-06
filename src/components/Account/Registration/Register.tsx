@@ -5,7 +5,14 @@ import { setCurrentUser } from '../reducer';
 import { useDispatch } from 'react-redux';
 function Register({ show, handleClose }) {
   
-  const [user, setUser] = useState<any>({});
+  const [user, setUser] = useState<any>({
+    firstName: '',
+    lastName: '',
+    username: '',
+    email: '',
+    password: '',
+    role: 'User'
+  });
   const [error, setError] = useState("");
   const dispatch = useDispatch();
 
@@ -44,6 +51,12 @@ function Register({ show, handleClose }) {
               </Form.Group>
             </div>
           </div>
+          <Form.Group controlId="form3Example6" className="form-outline mb-4">
+            <Form.Label>Username</Form.Label>
+            <Form.Control type="username" value={user.username} onChange={(e) => (
+                 setUser({...user, username: e.target.value})
+            )}/>
+          </Form.Group>
           <Form.Group controlId="form3Example3" className="form-outline mb-4">
             <Form.Label>Email address</Form.Label>
             <Form.Control type="email" value={user.email} onChange={(e) => (

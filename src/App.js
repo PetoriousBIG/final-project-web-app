@@ -5,6 +5,8 @@ import store from "./store";
 import Session from './components/Account/Session';
 import Home from './components/Home/Home';
 import Recipes from './components/Recipes/Recipes';
+import SearchResults from './components/Recipes/Search/SearchResults';
+import RecipeDetail from './components/Recipes/Search/Detail/RecipeDetail';
 import Restaurants from './components/Restaurants/Restaurants';
 import RestaurantDetail from './components/Restaurants/RestaurantDetail'; 
 import Header from './components/Header/Header';  
@@ -30,6 +32,8 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/recipes" element={<Recipes />} />
+            <Route path="/search" element={<SearchResults />} />
+            <Route path="/recipe/:id" element={<RecipeDetail />} />
             <Route path="/restaurants" element={<Restaurants />} />
             <Route path="/restaurant/:rid" element={<RestaurantDetail />} /> 
             <Route path="/menu/:rid" element={<Menu />} />
