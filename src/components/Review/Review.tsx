@@ -3,20 +3,15 @@ import { Modal, Button } from 'react-bootstrap';
 import * as client from "./client";
 import { Star } from 'lucide-react';
 import { addReview } from "./reducer";
-import { useSelector } from "react-redux";
 import { useDispatch } from 'react-redux';
 const Review = ({ show, handleClose, content_type, content_id, reviewer_name, reviewer_id }) => {
-  const [review, setReview ] = useState<any>({});
+  const [review, setReview ] = useState<any>({content_type: content_type, 
+                                              content_id: content_id, 
+                                              reviewer_id: reviewer_id, 
+                                              reviewer_name: reviewer_name});
   const [hover, setHover] = useState(0);
 
   const dispatch = useDispatch();
-  const { currentUser } = useSelector((state: any) => state.accountReducer);
-  if (currentUser) {
-      setReview({...review, content_type: content_type});
-      setReview({...review, content_id: content_id});
-      setReview({...review, reviewer_name: reviewer_name});
-      setReview({...review, reviewer_id: reviewer_id});
-  }
 
   const handleSubmit = async () => {
       try {
@@ -34,7 +29,6 @@ const Review = ({ show, handleClose, content_type, content_id, reviewer_name, re
         <Modal.Title style={{ marginBottom: '10px' }}>Write a Review</Modal.Title>
       </Modal.Header>
       
-      {currentUser ?
         <Modal.Body>
           <form className="write-review">
             <div className="star-rating">
@@ -57,17 +51,10 @@ const Review = ({ show, handleClose, content_type, content_id, reviewer_name, re
             <div className="form-group">
               <textarea placeholder="Write your review here..." required></textarea>
             </div>
-            <Button className="btn-submit" onClick={handleSubmit}>Submit Review</Button>
+            <Button className="btn-submit" onClick={() => handleSubmit}>Submit Review</Button>
           </form>
         </Modal.Body> 
         
-        :
-
-        <Modal.Body>
-          An account is required to write a review! Register now!
-        </Modal.Body>
-      
-      }
     </Modal>
   );
 };

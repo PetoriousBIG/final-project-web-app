@@ -19,9 +19,7 @@ function RestaurantDetail() {
     const [showReplyForm, setShowReplyForm] = useState(false);
     const fetchReviews = async (restaurantId) => {
         try {
-            console.log(restaurantId)
             const reviews = await client.fetchAllReviewsForContent('restaurant', restaurantId);
-            console.log(`${reviews}`)
             dispatch(setReviews(reviews));
         } catch ( err: any ) {
             console.log(err)
@@ -29,11 +27,11 @@ function RestaurantDetail() {
     }
     useEffect(() => {
         fetchReviews(id);
-    }, []);
+    }, [id]);
 
     const restaurant = useSelector((state: any) => state.restaurantReducer.restaurants.find((restaurant: any) => restaurant._id === id))
     const { reviews } = useSelector((state:any) => state.reviewReducer);
-    const { currentUser } = useSelector((state: any) => state.accountReducer);
+    const { currentUser } = useSelector((state:any) => state.accountReducer);
 
     useEffect(() => {
         Swiper.use([Navigation, Pagination]);
@@ -111,33 +109,30 @@ function RestaurantDetail() {
           <div className="comments-section mt-5">
             <div className="d-flex justify-content-between align-items-center mb-3">
               <h4 className="comments-count">{reviews ? reviews.length : 0} Comments</h4>
-              <button 
-                type="button"
-                className="btn btn-primary"
-            onClick={() => setShowReviewForm(true)}
-          >
-            Write a Review
-          </button>
+              
+              {currentUser &&
+                <button 
+                  type="button"
+                  className="btn btn-primary"
+                  onClick={() => setShowReviewForm(true)}>
+                  Write a Review
+                </button>
+              }
+
+            </div>
+            {reviews && renderComments(reviews)}
+          </div>
         </div>
-        {reviews && renderComments(reviews)}
-      </div>
-    </div>
-  </section>
-  
-  {currentUser &&
-    <div>
+      </section>
       <Review show={showReviewForm} 
               handleClose={() => setShowReviewForm(false)} 
               content_type={"restaurant"} 
               content_id={restaurant._id} 
-              reviewer_id={currentUser._id} 
-              reviewer_name={currentUser.firstName.concat(" ", currentUser.lastName) }/>
+              reviewer_id={currentUser ? currentUser._id : 0} 
+              reviewer_name={currentUser ? currentUser.firstName.concat(" ", currentUser.lastName) : "Dummy Name"}/>
       <ReplyComment show={showReplyForm} handleClose={() => setShowReplyForm(false)} />
     </div>
-  }
-
-</div>
-);
+  );
 }
 
 export default RestaurantDetail;
