@@ -37,7 +37,7 @@ function Restaurants() {
               <div className="col-xl-3 col-md-6 mb-4" data-aos="fade-up" data-aos-delay={200 * (index % 4)} key={restaurant.id}>
                 <div className="restaurant-box">
                   <div className="restaurant-img">
-                    <img src={`assets/img/restaurants/restaurant-${restaurant.id}.jpg`} className="img-fluid" alt={restaurant.name} />
+                    <img src={`assets/img/restaurants/restaurant-${restaurant._id}.jpg`} className="img-fluid" alt={restaurant.name} />
                   </div>
                   <div className="meta">
                     <h3 className="restaurant-name">{restaurant.name}</h3>
