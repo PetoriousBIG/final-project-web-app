@@ -1,0 +1,22 @@
+.comment-box {
+  width: 1000px;
+  max-width: calc(100% - 80px); /* Subtracting space for profile pic and some margin */
+}
+
+@media (max-width: 1100px) {
+  .comment-box {
+    width: 800px;
+  }
+}
+
+@media (max-width: 900px) {
+  .comment-box {
+    width: 600px;
+  }
+}
+
+@media (max-width: 700px) {
+  .comment-box {
+    width: 100%;
+  }
+}
