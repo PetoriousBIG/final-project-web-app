@@ -43,7 +43,8 @@ export const addComment = async (recipeId: string, comment: string) => {
 
 export const getComments = async (recipeId: string) => {
   try {
-    const response = await apiClient.get(`/api/recipes/${encodeURIComponent(recipeId)}/comments`);
+    const encodedId = encodeURIComponent(recipeId.split('#')[1]); 
+    const response = await apiClient.get(`/api/recipes/${encodedId}/comments`);
     return response.data;
   } catch (error) {
     console.error('Error fetching comments:', error);
@@ -67,6 +68,17 @@ export const getUserComments = async (userId: string) => {
     return response.data;
   } catch (error) {
     console.error('Error fetching user comments:', error);
+    throw error;
+  }
+};
+
+export const addReply = async (recipeId: string, parentCommentId: string, comment: string) => {
+  try {
+    const encodedId = encodeURIComponent(recipeId.split('#')[1]); 
+    const response = await apiClient.post(`/api/recipes/${encodedId}/comments`, { comment, parentCommentId });
+    return response.data;
+  } catch (error) {
+    console.error('Error adding reply:', error);
     throw error;
   }
 };

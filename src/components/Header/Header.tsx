@@ -31,7 +31,10 @@ function Header() {
             <i className="mobile-nav-toggle d-xl-none bi bi-list" />
           </nav>
           <div className="button-container d-flex">
-            { currentUser === null ?
+              {currentUser && (
+                <span className="fs-5 me-4 mt-1 text-white">Welcome, {currentUser.username}</span>
+              )}
+              { currentUser === null ?
               <a
                 className="btn-border-text d-none d-xl-block"
                 href="#sign-in"
