@@ -11,6 +11,7 @@ import MenuDetail from './components/Menu/MenuDetail';
 import ProfileWrapper from './components/Profile/ProfileWrapper'; 
 import ProfileEditUser from './components/Profile/ProfileEditUser';
 import ProfileEditOwner from './components/Profile/ProfileEditOwner';
+import ProfileEditChef from './components/Profile/ProfileEditChef';
 import 'aos/dist/aos.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';
@@ -33,7 +34,7 @@ function App() {
         <Route path="/restaurant/:rid/menu" element={<Menu />} />
         <Route path="/restaurant/:rid/menu/:mid" element={<MenuDetail />} /> 
         <Route path="/profile/:id" element={<ProfileWrapper />} /> 
-        <Route path="/profile/" element={< ProfileEditOwner/>} />
+        <Route path="/profile/" element={< ProfileEditChef/>} />
         {/* Temporary routes for testing */}
         <Route path="/profile/1" element={<ProfileWrapper />} />
         <Route path="/profile/2" element={<ProfileWrapper />} />
