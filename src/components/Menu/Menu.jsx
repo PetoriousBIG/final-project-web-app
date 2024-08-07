@@ -1,6 +1,88 @@
 import React from 'react';
+import { Link, useParams } from 'react-router-dom';
+
+const menuItems = [
+  {
+    mid: 'lobster-bisque',
+    name: 'Lobster Bisque',
+    price: '$5.95',
+    img: 'assets/img/menu/lobster-bisque.jpg',
+    description: 'Lorem, deren, trataro, filede, nerada',
+  },
+  {
+    mid: 'bread-barrel',
+    name: 'Bread Barrel',
+    price: '$6.95',
+    img: 'assets/img/menu/bread-barrel.jpg',
+    description: 'Lorem, deren, trataro, filede, nerada',
+  },
+  {
+    mid: 'crab-cake',
+    name: 'Crab Cake',
+    price: '$7.95',
+    img: 'assets/img/menu/cake.jpg',
+    description: 'A delicate crab cake served on a toasted roll with lettuce and tartar sauce',
+  },
+  {
+    mid: 'caesar-selections',
+    name: 'Caesar Selections',
+    price: '$8.95',
+    img: 'assets/img/menu/caesar.jpg',
+    description: 'Lorem, deren, trataro, filede, nerada',
+  },
+  {
+    mid: 'tuscan-grilled',
+    name: 'Tuscan Grilled',
+    price: '$9.95',
+    img: 'assets/img/menu/tuscan-grilled.jpg',
+    description: 'Grilled chicken with provolone, artichoke hearts, and roasted red pesto',
+  },
+  {
+    mid: 'mozzarella-stick',
+    name: 'Mozzarella Stick',
+    price: '$4.95',
+    img: 'assets/img/menu/mozzarella.jpg',
+    description: 'Lorem, deren, trataro, filede, nerada',
+  },
+  {
+    mid: 'greek-salad',
+    name: 'Greek Salad',
+    price: '$9.95',
+    img: 'assets/img/menu/greek-salad.jpg',
+    description: 'Fresh spinach, crisp romaine, tomatoes, and Greek olives',
+  },
+  {
+    mid: 'spinach-salad',
+    name: 'Spinach Salad',
+    price: '$9.95',
+    img: 'assets/img/menu/spinach-salad.jpg',
+    description: 'Fresh spinach with mushrooms, hard boiled egg, and warm bacon vinaigrette',
+  },
+  {
+    mid: 'lobster-roll',
+    name: 'Lobster Roll',
+    price: '$12.95',
+    img: 'assets/img/menu/lobster-roll.jpg',
+    description: 'Plump lobster meat, mayo and crisp lettuce on a toasted bulky roll',
+  }
+];
+
+const MenuItem = ({ item, rid }) => (
+  <div className="col-lg-6 menu-item">
+    <img src={item.img} className="menu-img" alt={item.name} />
+    <div className="menu-content">
+      <Link to={`/restaurant/${rid}/menu/${item.id}`}>{item.name}</Link><span>{item.price}</span>
+      <Link to={`/restaurant/${rid}/menu/${item.id}`} className="review-more"> &gt; Review More</Link>
+    </div>
+    <div className="menu-ingredients">
+      {item.description}
+    </div>
+  </div>
+);
 
 function Menu() {
+  const { rid } = useParams(); // Get the restaurant ID from route parameters
+
   return (
     <div>
       {/* Menu Section */}
@@ -16,105 +98,9 @@ function Menu() {
         {/* End Section Title */}
         <div className="container">
           <div className="row isotope-container" data-aos="fade-up" data-aos-delay={200}>
-            <div className="col-lg-6 menu-item">
-              <img src="assets/img/menu/lobster-bisque.jpg" className="menu-img" alt="Lobster Bisque" />
-              <div className="menu-content">
-                <a href="/menu/lobster-bisque">Lobster Bisque</a><span>$5.95</span>
-                <a href="/menu/lobster-bisque" className="review-more"> &gt; Review More</a>
-              </div>
-              <div className="menu-ingredients">
-                Lorem, deren, trataro, filede, nerada
-              </div>
-            </div>
-            {/* Menu Item */}
-            <div className="col-lg-6 menu-item">
-              <img src="assets/img/menu/bread-barrel.jpg" className="menu-img" alt="Bread Barrel" />
-              <div className="menu-content">
-                <a href="/menu/bread-barrel">Bread Barrel</a><span>$6.95</span>
-                <a href="/menu/bread-barrel" className="review-more"> &gt; Review More</a>
-              </div>
-              <div className="menu-ingredients">
-                Lorem, deren, trataro, filede, nerada
-              </div>
-            </div>
-            {/* Menu Item */}
-            <div className="col-lg-6 menu-item">
-              <img src="assets/img/menu/cake.jpg" className="menu-img" alt="Crab Cake" />
-              <div className="menu-content">
-                <a href="/menu/crab-cake">Crab Cake</a><span>$7.95</span>
-                <a href="/menu/crab-cake" className="review-more"> &gt; Review More</a>
-              </div>
-              <div className="menu-ingredients">
-                A delicate crab cake served on a toasted roll with lettuce and tartar sauce
-              </div>
-            </div>
-            {/* Menu Item */}
-            <div className="col-lg-6 menu-item">
-              <img src="assets/img/menu/caesar.jpg" className="menu-img" alt="Caesar Selections" />
-              <div className="menu-content">
-                <a href="/menu/caesar-selections">Caesar Selections</a><span>$8.95</span>
-                <a href="/menu/caesar-selections" className="review-more"> &gt; Review More</a>
-              </div>
-              <div className="menu-ingredients">
-                Lorem, deren, trataro, filede, nerada
-              </div>
-            </div>
-            {/* Menu Item */}
-            <div className="col-lg-6 menu-item">
-              <img src="assets/img/menu/tuscan-grilled.jpg" className="menu-img" alt="Tuscan Grilled" />
-              <div className="menu-content">
-                <a href="/menu/tuscan-grilled">Tuscan Grilled</a><span>$9.95</span>
-                <a href="/menu/tuscan-grilled" className="review-more"> &gt; Review More</a>
-              </div>
-              <div className="menu-ingredients">
-                Grilled chicken with provolone, artichoke hearts, and roasted red pesto
-              </div>
-            </div>
-            {/* Menu Item */}
-            <div className="col-lg-6 menu-item">
-              <img src="assets/img/menu/mozzarella.jpg" className="menu-img" alt="Mozzarella Stick" />
-              <div className="menu-content">
-                <a href="/menu/mozzarella-stick">Mozzarella Stick</a><span>$4.95</span>
-                <a href="/menu/mozzarella-stick" className="review-more"> & gt; Review More</a>
-              </div>
-              <div className="menu-ingredients">
-                Lorem, deren, trataro, filede, nerada
-              </div>
-            </div>
-            {/* Menu Item */}
-            <div className="col-lg-6 menu-item">
-              <img src="assets/img/menu/greek-salad.jpg" className="menu-img" alt="Greek Salad" />
-              <div className="menu-content">
-                <a href="/menu/greek-salad">Greek Salad</a><span>$9.95</span>
-                <a href="/menu/greek-salad" className="review-more"> & gt; Review More</a>
-              </div>
-              <div className="menu-ingredients">
-                Fresh spinach, crisp romaine, tomatoes, and Greek olives
-              </div>
-            </div>
-            {/* Menu Item */}
-            <div className="col-lg-6 menu-item">
-              <img src="assets/img/menu/spinach-salad.jpg" className="menu-img" alt="Spinach Salad" />
-              <div className="menu-content">
-                <a href="/menu/spinach-salad">Spinach Salad</a><span>$9.95</span>
-                <a href="/menu/spinach-salad" className="review-more"> & gt; Review More</a>
-              </div>
-              <div className="menu-ingredients">
-                Fresh spinach with mushrooms, hard boiled egg, and warm bacon vinaigrette
-              </div>
-            </div>
-            {/* Menu Item */}
-            <div className="col-lg-6 menu-item">
-              <img src="assets/img/menu/lobster-roll.jpg" className="menu-img" alt="Lobster Roll" />
-              <div className="menu-content">
-                <a href="/menu/lobster-roll">Lobster Roll</a><span>$12.95</span>
-                <a href="/menu/lobster-roll" className="review-more"> & gt; Review More</a>
-              </div>
-              <div className="menu-ingredients">
-                Plump lobster meat, mayo and crisp lettuce on a toasted bulky roll
-              </div>
-            </div>
-            {/* Menu Container */}
+            {menuItems.map(item => (
+              <MenuItem key={item.id} item={item} rid={rid} />
+            ))}
           </div>
         </div>
       </section>

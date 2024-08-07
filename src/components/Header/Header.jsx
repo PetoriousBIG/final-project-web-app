@@ -33,7 +33,7 @@ function Header() {
             >
               Sign In
             </a>
-            <a className="btn-border-text d-none d-xl-block" href="#profile">Profile</a>
+            <a className="btn-border-text d-none d-xl-block" href="/profile">Profile</a>
           </div>
         </div>
       </div>
