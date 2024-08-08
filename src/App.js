@@ -8,7 +8,10 @@ import Header from './components/Header/Header';
 import AOS from 'aos';
 import Menu from './components/Menu/Menu';
 import MenuDetail from './components/Menu/MenuDetail';
-import ProfileWrapper from './components/Profile/ProfileWrapper'; 
+
+import SelfProfile from './components/Profile/SelfProfile';
+import OtherProfile from './components/Profile/OtherProfile';
+
 import ProfileEditUser from './components/Profile/ProfileEditUser';
 import ProfileEditOwner from './components/Profile/ProfileEditOwner';
 import ProfileEditChef from './components/Profile/ProfileEditChef';
@@ -33,11 +36,17 @@ function App() {
         <Route path="/restaurant/:rid" element={<RestaurantDetail />} /> 
         <Route path="/restaurant/:rid/menu" element={<Menu />} />
         <Route path="/restaurant/:rid/menu/:mid" element={<MenuDetail />} /> 
-        <Route path="/profile/:id" element={<ProfileWrapper />} /> 
-        <Route path="/profile/" element={< ProfileEditChef/>} />
-        {/* Temporary routes for testing */}
-        <Route path="/profile/1" element={<ProfileWrapper />} />
-        <Route path="/profile/2" element={<ProfileWrapper />} />
+
+        {/* Route for the owner's profile */}
+        <Route path="/profile/self" element={<SelfProfile />} />
+        
+        {/* Route for viewing another user's profile */}
+        <Route path="/profile/:id" element={<OtherProfile />} />
+
+        <Route path="/profile-edit-chef" element={<ProfileEditChef />} />
+        <Route path="/profile-edit-owner" element={<ProfileEditOwner />} />
+        <Route path="/profile-edit-user" element={<ProfileEditUser />} />
+        
       </Routes>
     </div>
   );

@@ -1,23 +1,12 @@
-import React, { useState } from 'react';
+import React from 'react';
 
-function Profile({ isOwner }) {
-  const [isFollowing, setIsFollowing] = useState(false);
-
-  const handleFollowClick = () => {
-    setIsFollowing(!isFollowing);
-  };
-
+function OtherProfile() {
   return (
     <div>
-      {/* Profile Page Section */}
-      <br />
-      <br />
-      <br />
       <section id="profile-page" className="profile-page section">
-        {/* Section Title */}
         <div className="container section-title" data-aos="fade-up">
           <h2>Profile</h2>
-        </div>{/* End Section Title */}
+        </div>
         <div className="container">
           <div className="row gy-5">
             <div className="col-xl-6 col-md-8 mb-4" data-aos="fade-up">
@@ -30,20 +19,6 @@ function Profile({ isOwner }) {
                       className="img-fluid img-thumbnail mt-4 mb-2"
                       style={{ width: 150, zIndex: 1 }}
                     />
-                    {isOwner ? (
-                      <button type="button" className="btn btn-outline-light text-body" style={{ zIndex: 1 }}>
-                        Edit profile
-                      </button>
-                    ) : (
-                      <button
-                        type="button"
-                        className="btn btn-outline-light text-body"
-                        style={{ zIndex: 1 }}
-                        onClick={handleFollowClick}
-                      >
-                        {isFollowing ? 'Unfollow' : 'Follow'}
-                      </button>
-                    )}
                   </div>
                   <div className="profile-info ms-3" style={{ marginTop: 250 }}>
                     <h5>Andy Horwitz</h5>
@@ -56,7 +31,7 @@ function Profile({ isOwner }) {
                       <p className="small text-muted mb-0">Followers</p>
                     </div>
                     <div>
-                      <p className="mb-1 h5">4x</p>
+                      <p className="mb-1 h5">4</p>
                       <p className="small text-muted mb-0">Following</p>
                     </div>
                   </div>
@@ -73,9 +48,9 @@ function Profile({ isOwner }) {
             </div>
           </div>
         </div>
-      </section>{/* /Profile Page Section */}
+      </section>
     </div>
   );
 }
 
-export default Profile;
+export default OtherProfile;

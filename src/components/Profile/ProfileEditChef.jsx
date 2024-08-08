@@ -1,16 +1,14 @@
-import React, { useState } from 'react'
+import React, { useState } from 'react';
 
-function ProfileEditUser() {
-  const [activeForm, setActiveForm] = useState('personal-info')
+function ProfileEditChef() {
+  const [activeForm, setActiveForm] = useState('personal-info');
 
   const showForm = (formName) => {
-    setActiveForm(formName)
-  }
+    setActiveForm(formName);
+  };
 
   return (
-    <div>
     <section id="profile-edit" className="profile-edit section">
-      <slot type="section-title" />
       <div className="container" data-aos="fade-up" data-aos-delay={100}>
         <div className="row gy-4">
           <div className="col-lg-5">
@@ -18,12 +16,11 @@ function ProfileEditUser() {
               <div className="profile-header">
                 <div className="profile-picture">
                   <img src="/path/to/default-avatar.jpg" alt="Profile" id="profile-img" />
-                  <input type="file" id="profile-upload" accept="image/*" style={{display: 'none'}} />
+                  <input type="file" id="profile-upload" accept="image/*" style={{ display: 'none' }} />
                   <label htmlFor="profile-upload" className="upload-btn">Upload</label>
                 </div>
                 <div className="profile-info">
                   <h2 id="user-name">John Doe</h2>
-                  <br />
                   <p id="user-role">Role: Chef</p>
                 </div>
               </div>
@@ -31,7 +28,7 @@ function ProfileEditUser() {
               <div 
                 className={`info-item d-flex ${activeForm === 'personal-info' ? 'active' : ''}`} 
                 onClick={() => showForm('personal-info')}
-                style={{cursor: 'pointer'}}
+                style={{ cursor: 'pointer' }}
               >
                 <i className="bi bi-person flex-shrink-0" />
                 <div>
@@ -43,7 +40,7 @@ function ProfileEditUser() {
               <div 
                 className={`info-item d-flex ${activeForm === 'manage-dishes' ? 'active' : ''}`}
                 onClick={() => showForm('manage-dishes')}
-                style={{cursor: 'pointer'}}
+                style={{ cursor: 'pointer' }}
               >
                 <i className="bi bi-clipboard2-check flex-shrink-0" />
                 <div>
@@ -51,7 +48,6 @@ function ProfileEditUser() {
                   <p>Add or edit dishes</p>
                 </div>
               </div>
-              
             </div>
           </div>  
 
@@ -117,8 +113,7 @@ function ProfileEditUser() {
         </div>
       </div>
     </section>
-    </div>
-  )
+  );
 }
 
-export default ProfileEditUser
+export default ProfileEditChef;

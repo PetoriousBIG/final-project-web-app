@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 
-function ProfileEditUser() {
+function ProfileEditOwner() {
   const [activeForm, setActiveForm] = useState('personal-info')
 
   const showForm = (formName) => {
@@ -121,4 +121,4 @@ function ProfileEditUser() {
   )
 }
 
-export default ProfileEditUser
+export default ProfileEditOwner
