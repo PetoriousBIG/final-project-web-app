@@ -31,9 +31,9 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/recipes" element={<Recipes />} />
             <Route path="/restaurants" element={<Restaurants />} />
-            <Route path="/restaurant/:id" element={<RestaurantDetail />} /> 
-            <Route path="/menu" element={<Menu />} />
-            <Route path="/menu/:id" element={<MenuDetail />} /> 
+            <Route path="/restaurant/:rid" element={<RestaurantDetail />} /> 
+            <Route path="/menu/:rid" element={<Menu />} />
+            <Route path="/menu/:rid/:iid" element={<MenuDetail />} /> 
           </Routes>
         </div>
       </Session>

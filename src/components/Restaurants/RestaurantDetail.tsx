@@ -8,12 +8,11 @@ import 'swiper/css/pagination';
 import Review from '../Review/Review';
 import { useSelector, useDispatch } from "react-redux";
 import ReplyComment from '../Review/ReplyComment';
-import { updateRestaurant } from './reducer';
 import * as client from "../Review/client";
 import { setReviews } from '../Review/reducer';
 
 function RestaurantDetail() {
-    const { id } = useParams();
+    const { rid } = useParams();
     const dispatch = useDispatch();
     const [showReviewForm, setShowReviewForm] = useState(false);
     const [showReplyForm, setShowReplyForm] = useState(false);
@@ -26,10 +25,10 @@ function RestaurantDetail() {
         }
     }
     useEffect(() => {
-        fetchReviews(id);
-    }, [id]);
+        fetchReviews(rid);
+    }, [rid]);
 
-    const restaurant = useSelector((state: any) => state.restaurantReducer.restaurants.find((restaurant: any) => restaurant._id === id))
+    const restaurant  = useSelector((state: any) => state.restaurantReducer.restaurants.find((restaurant: any) => restaurant._id === rid))
     const { reviews } = useSelector((state:any) => state.reviewReducer);
     const { currentUser } = useSelector((state:any) => state.accountReducer);
 
@@ -102,7 +101,7 @@ function RestaurantDetail() {
                 <img src={`${process.env.PUBLIC_URL}/assets/img/owners/owner.jpg`} className="owner-img" alt="Owner" />
                 <h3>{restaurant.owner}</h3>
                 <p>{restaurant.introduction}</p>
-                <Link to="/menu" className="btn btn-primary mt-3">Check the Menu</Link>
+                <Link to={`/menu/${rid}`} className="btn btn-primary mt-3">Check the Menu</Link>
               </div>
             </div>
           </div>
