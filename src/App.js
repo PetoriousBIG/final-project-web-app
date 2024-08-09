@@ -38,7 +38,7 @@ function App() {
         <Route path="/restaurant/:rid/menu/:mid" element={<MenuDetail />} /> 
 
         {/* Route for the owner's profile */}
-        <Route path="/profile/self" element={<SelfProfile />} />
+        <Route path="/profile" element={<SelfProfile />} />
         
         {/* Route for viewing another user's profile */}
         <Route path="/profile/:id" element={<OtherProfile />} />
