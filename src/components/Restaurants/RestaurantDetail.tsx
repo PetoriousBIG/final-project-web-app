@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, useNavigate, Link } from 'react-router-dom';
 import Swiper from 'swiper';
 import { Navigation, Pagination } from 'swiper/modules';
 import 'swiper/css';
@@ -8,29 +8,59 @@ import 'swiper/css/pagination';
 import Review from '../Review/Review';
 import { useSelector, useDispatch } from "react-redux";
 import ReplyComment from '../Review/ReplyComment';
-import * as client from "../Review/client";
+import * as restaurantClient from "../Restaurants/client";
+import * as reviewClient from "../Review/client";
+import * as accountClient from "../Account/client";
 import { setReviews } from '../Review/reducer';
+import Confirmation from '../Confirmation';
+import { deleteRestaurant, setCurrentRestaurant } from './reducer';
+import { setUsers } from '../Account/reducer'
+import Add from "./Add";
 
 function RestaurantDetail() {
     const { rid } = useParams();
     const dispatch = useDispatch();
     const [showReviewForm, setShowReviewForm] = useState(false);
     const [showReplyForm, setShowReplyForm] = useState(false);
+    const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
+    const [showEditForm, setShowEditForm] = useState(false);
+    const navigate = useNavigate()
+
     const fetchReviews = async (restaurantId) => {
         try {
-            const reviews = await client.fetchAllReviewsForContent('restaurant', restaurantId);
+            const reviews = await reviewClient.fetchAllReviewsForContent('restaurant', restaurantId);
             dispatch(setReviews(reviews));
         } catch ( err: any ) {
             console.log(err)
         }
     }
-    useEffect(() => {
-        fetchReviews(rid);
-    }, [rid]);
 
-    const restaurant  = useSelector((state: any) => state.restaurantReducer.restaurants.find((restaurant: any) => restaurant._id === rid))
+    const fetchChefs = async () => {
+      try {
+          const chefs = await accountClient.fetchUsersForRole('Chef');
+          dispatch(setUsers(chefs));
+      } catch (err: any) {
+          console.log(err);
+      }
+  }
+
+  const fetchRestaurant = async () => {
+      try {
+          const restaurants = await restaurantClient.fetchRestaurantUsingId(rid);
+          dispatch(setCurrentRestaurant(restaurants));
+      } catch ( err: any ) {
+          console.log(err)
+      }
+  }
+  useEffect(() => {
+      fetchRestaurant();
+      fetchChefs();
+      fetchReviews(rid);
+  }, []);
+
+    const { currentRestaurant } = useSelector((state: any) => state.restaurantReducer)   
     const { reviews } = useSelector((state:any) => state.reviewReducer);
-    const { currentUser } = useSelector((state:any) => state.accountReducer);
+    const { users, currentUser } = useSelector((state:any) => state.accountReducer);
 
     useEffect(() => {
         Swiper.use([Navigation, Pagination]);
@@ -77,6 +107,17 @@ function RestaurantDetail() {
     ));
   };
 
+  const handleDelete = async () => {
+      try {
+          const status = await restaurantClient.deleteRestaurant(rid);
+          dispatch(deleteRestaurant(rid));
+      } catch (err: any) {
+          console.log(err)
+      }
+      setShowDeleteConfirmation(false);
+      navigate(-1)
+  }
+
   return (
     <div>
       <section id="restaurant-detail" className="restaurant-detail section">
@@ -85,11 +126,7 @@ function RestaurantDetail() {
             <div className="col-lg-6">
               <div className="restaurant-carousel swiper-container">
                 <div className="swiper-wrapper">
-                  { restaurant.images.map((image, index) => (
-                    <div className="swiper-slide" key={index}>
-                      <img src={image} alt={`Restaurant view ${index + 1}`} />
-                    </div>
-                  ))}
+                  <img src={`${process.env.PUBLIC_URL}/assets/img/generic/generic_restaurant.jpg`} alt={`generic-restaurant.jpg`} />
                 </div>
                 <div className="swiper-pagination" />
                 <div className="swiper-button-next" />
@@ -98,10 +135,10 @@ function RestaurantDetail() {
             </div>
             <div className="col-lg-6">
               <div className="owner-info">
-                <img src={`${process.env.PUBLIC_URL}/assets/img/owners/owner.jpg`} className="owner-img" alt="Owner" />
-                <h3>{restaurant.owner}</h3>
-                <p>{restaurant.introduction}</p>
-                <Link to={`/menu/${rid}`} className="btn btn-primary mt-3">Check the Menu</Link>
+                <img src={`${process.env.PUBLIC_URL}/assets/img/generic/generic_user.jpg`} className="owner-img" alt="Owner" />
+                <h3>{ currentRestaurant && currentRestaurant.owner}</h3>
+                <p>{ currentRestaurant && currentRestaurant.introduction}</p>
+                <Link to={`/restaurants/${rid}/menu/`} className="btn btn-primary mt-3">Check the Menu</Link>
               </div>
             </div>
           </div>
@@ -109,13 +146,33 @@ function RestaurantDetail() {
             <div className="d-flex justify-content-between align-items-center mb-3">
               <h4 className="comments-count">{reviews ? reviews.length : 0} Comments</h4>
               
-              {currentUser &&
+              {currentUser && currentUser.role === 'User' &&
                 <button 
                   type="button"
                   className="btn btn-primary"
                   onClick={() => setShowReviewForm(true)}>
                   Write a Review
                 </button>
+              }
+
+              {currentUser && currentRestaurant && currentUser._id === currentRestaurant.owner_id &&
+                
+                <div>
+                  <button type="button"
+                    className='btn btn-primary me-3'
+                    onClick={() => setShowEditForm(true)}>
+                    Edit Restaurant
+                  </button>
+
+                  <button type="button"
+                  className='btn btn-primary'
+                  onClick={() => {
+                    setShowDeleteConfirmation(true)
+
+                    }}>
+                    Delete Restaurant
+                  </button>
+                </div>
               }
 
             </div>
@@ -126,10 +183,25 @@ function RestaurantDetail() {
       <Review show={showReviewForm} 
               handleClose={() => setShowReviewForm(false)} 
               content_type={"restaurant"} 
-              content_id={restaurant._id} 
+              content_id={currentRestaurant && currentRestaurant._id} 
               reviewer_id={currentUser ? currentUser._id : 0} 
               reviewer_name={currentUser ? currentUser.firstName.concat(" ", currentUser.lastName) : "Dummy Name"}/>
       <ReplyComment show={showReplyForm} handleClose={() => setShowReplyForm(false)} />
+      <Confirmation show={showDeleteConfirmation} 
+                    handleClose={() => setShowDeleteConfirmation(false)}
+                    handleDelete={() => handleDelete()}/>
+      <Add show={showEditForm}
+            handleClose={() => {
+              setShowEditForm(false)
+            }}
+            editing={true}
+            refresh={fetchRestaurant}
+            rid={currentRestaurant && currentRestaurant._id}
+            users={users}
+            owner_id={currentUser._id}
+            owner={currentUser.firstName.concat(" ", currentUser.lastName)}/>
+
+      
     </div>
   );
 }

@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
-    menuItems: [],
+    menuItems: ['hello world'],
 };
 const menuItemSlice = createSlice({
     name: "menuItems",
@@ -8,6 +8,7 @@ const menuItemSlice = createSlice({
     reducers: {
         setMenuItems: (state, action) => {
             state.menuItems = action.payload;
+            console.log(`From reducer: ${state.menuItems}`);
         },
 
         addMenuItem: (state, { payload: menuItem }) => {
@@ -19,7 +20,8 @@ const menuItemSlice = createSlice({
                 price: menuItem.price,
                 chef_id: menuItem.chef_id,
                 chef_name: menuItem.chef_name,
-                chef_intro: menuItem.chef_intro
+                chefs_intro: menuItem.chef_intro,
+                images: menuItem.images
             };
             state.menuItems = [...state.menuItems, newMenuItem] as any;
         },

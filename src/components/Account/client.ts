@@ -23,3 +23,12 @@ export const signup = async (user: any) => {
     const response = await axiosWithCredentials.post(`${USERS_API}/signup`, user);
     return response.data;
 };
+
+export const fetchUsersForRole = async (role: String) => {
+    const response = await axios.get(`${USERS_API}`, {
+        params: {
+            role: role
+        }
+    });
+    return response.data;
+}

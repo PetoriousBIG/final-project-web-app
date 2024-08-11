@@ -23,3 +23,8 @@ export const updateRestaurant = async (restaurant: any) => {
     return response.data;
 }
 
+export const fetchRestaurantUsingId = async (restaurantId: string) => {
+    const response = await axios.get(`${RESTAURANTS_API}/${restaurantId}`);
+    return response.data;
+}
+
