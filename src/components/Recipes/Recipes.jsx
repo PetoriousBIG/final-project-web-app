@@ -1,6 +1,17 @@
-import React from 'react';
+
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 function Recipes() {
+  const [query, setQuery] = useState('');
+  const navigate = useNavigate();
+
+  const handleSearchRecipes = (e) => {
+    e.preventDefault();
+    if (query.trim()) {
+      navigate(`/search?query=${encodeURIComponent(query)}`);
+    }
+  };
   return (
     <div>
       <section id="recipe" className="recipe section">
@@ -10,9 +21,17 @@ function Recipes() {
         <div className="container section-title" data-aos="fade-up">
           <h2>Recipe</h2>
           <p>Vegan Recipes</p> <br />
-          <form action="#" className="form-search d-flex align-items-stretch mb-3" data-aos="fade-up" data-aos-delay={200}>
-            <input type="text" className="form-control" placeholder="Search for your favorite vegan recipe" />
-            <button type="submit" className="btn btn-primary">Search</button>
+          <form onSubmit={handleSearchRecipes} className="form-search d-flex align-items-stretch mb-3" data-aos="fade-up" data-aos-delay={200}>
+            <input 
+              type="text" 
+              className="form-control" 
+              placeholder="Search for your favorite vegan recipe" 
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+            />
+            <button type="submit" className="btn btn-primary">
+              Search
+            </button>
           </form>
         </div>{/* End Section Title */}
         

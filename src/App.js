@@ -1,8 +1,13 @@
 import AOS from 'aos';
 import React, { useEffect } from 'react';
 import { Route, Routes } from 'react-router-dom';
+import { Provider } from "react-redux";
+import store from "./store";
+import Session from './components/Account/Session';
 import Home from './components/Home/Home';
 import Recipes from './components/Recipes/Recipes';
+import SearchResults from './components/Recipes/Search/SearchResults';
+import RecipeDetail from './components/Recipes/Search/Detail/RecipeDetail';
 import Restaurants from './components/Restaurants/Restaurants';
 import RestaurantDetail from './components/Restaurants/RestaurantDetail'; 
 import Header from './components/Header/Header';  
@@ -30,31 +35,35 @@ function App() {
   }, []);
 
   return (
-    <div>
-      <Header /> 
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/recipes" element={<Recipes />} />
-        <Route path="/restaurants" element={<Restaurants />} />
-        <Route path="/restaurant/:rid" element={<RestaurantDetail />} /> 
-        <Route path="/restaurant/:rid/menu" element={<Menu />} />
-        <Route path="/restaurant/:rid/menu/:mid" element={<MenuDetail />} /> 
+    <Provider store={store}>
+      <Session>
+        <div>
+          <Header /> 
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/recipes" element={<Recipes />} />
+              <Route path="/restaurants" element={<Restaurants />} />
+              <Route path="/restaurant/:rid" element={<RestaurantDetail />} /> 
+              <Route path="/restaurant/:rid/menu" element={<Menu />} />
+              <Route path="/restaurant/:rid/menu/:mid" element={<MenuDetail />} /> 
 
-        {/* Route for the owner's profile */}
-        <Route path="/profile" element={<SelfProfile />} />
+              {/* Route for the owner's profile */}
+              <Route path="/profile" element={<SelfProfile />} />
         
-        {/* Route for viewing another user's profile */}
-        <Route path="/profile/:id" element={<OtherProfile />} />
+              {/* Route for viewing another user's profile */}
+              <Route path="/profile/:id" element={<OtherProfile />} />
 
-        <Route path="/profile-edit-chef" element={<ProfileEditChef />} />
-        <Route path="/profile-edit-owner" element={<ProfileEditOwner />} />
-        <Route path="/profile-edit-user" element={<ProfileEditUser />} />
+              <Route path="/profile-edit-chef" element={<ProfileEditChef />} />
+              <Route path="/profile-edit-owner" element={<ProfileEditOwner />} />
+              <Route path="/profile-edit-user" element={<ProfileEditUser />} />
         
-        <Route path="/teams" element={<Teams />} />
-        <Route path="*" element={<Home />} />
-      </Routes>
-      <Footer />
-    </div>
+              <Route path="/teams" element={<Teams />} />
+              <Route path="*" element={<Home />} />
+          </Routes>
+          <Footer />
+        </div>
+      </Session>
+    </Provider>
   );
 }
 
