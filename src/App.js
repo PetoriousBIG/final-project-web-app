@@ -28,16 +28,16 @@ function App() {
     <Provider store={store}>
       <Session>
         <div>
-          <Header /> 
+          <Header />
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/recipes" element={<Recipes />} />
             <Route path="/search" element={<SearchResults />} />
             <Route path="/recipe/:id" element={<RecipeDetail />} />
             <Route path="/restaurants" element={<Restaurants />} />
-            <Route path="/restaurant/:rid" element={<RestaurantDetail />} /> 
-            <Route path="/menu/:rid" element={<Menu />} />
-            <Route path="/menu/:rid/:iid" element={<MenuDetail />} /> 
+            <Route path="/restaurants/:rid" element={<RestaurantDetail />} /> 
+            <Route path="/restaurants/:rid/menu" element={<Menu />} />
+            <Route path="/restaurants/:rid/menu/:iid" element={<MenuDetail />} /> 
           </Routes>
         </div>
       </Session>

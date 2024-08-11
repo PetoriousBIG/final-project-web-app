@@ -2,6 +2,7 @@ import React, {useEffect} from 'react';
 import * as client from "./client";
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router';
+import { Link } from 'react-router-dom';
 import { setMenuItems } from './reducer';
 
 function Menu() {
@@ -10,7 +11,7 @@ function Menu() {
 
     const fetchMenuItems = async () => {
         try {
-            const menuItems = await client.fetchMenuItemByRestaurant(rid);
+            const menuItems = await client.fetchMenuItemsByRestaurant(rid);
             dispatch(setMenuItems(menuItems));
         } catch (err: any) {
             console.log(err)
@@ -41,10 +42,12 @@ function Menu() {
               {menuItems.map((menuItem) => (
                 <div className="col-lg-6 menu-item">
                   <img src="assets/img/menu/lobster-bisque.jpg" className="menu-img" alt={menuItem.name} />
-                  <div className="menu-content">
-                    <a href={`/menu/${rid}/${menuItem._id}`}>{menuItem.name}</a><span>{menuItem.price}</span>
-                    <a href="/menu/lobster-bisque" className="review-more"> Review More</a>
-                  </div>
+                  <Link to={`/restaurants/${rid}/menu/${menuItem._id}`}>
+                    <div className="menu-content">
+                      <span>{menuItem.name}{menuItem.price}</span>
+                      <span className="review-more"> Review More</span>
+                    </div>
+                  </Link>
                   <div className="menu-ingredients">
                     {menuItem.description}
                   </div>

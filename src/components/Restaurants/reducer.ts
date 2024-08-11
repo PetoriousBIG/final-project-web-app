@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
     restaurants: [],
+    currentRestaurant: null
 };
 const restaurantsSlice = createSlice({
     name: "restaurants",
@@ -8,6 +9,10 @@ const restaurantsSlice = createSlice({
     reducers: {
         setRestaurants: (state, action) => {
             state.restaurants = action.payload;  
+        },
+
+        setCurrentRestaurant: (state, action) => {
+            state.currentRestaurant = action.payload;
         },
 
         addRestaurant: (state, { payload: restaurant }) => {
@@ -19,7 +24,7 @@ const restaurantsSlice = createSlice({
                 owner_id: restaurant.owner_id,
                 owner: restaurant.owner,
                 introduction: restaurant.introduction,
-                images: restaurant.images
+                chefs: restaurant.chefs,
             };
             state.restaurants = [...state.restaurants, newRestaurant] as any;
         },
@@ -43,6 +48,6 @@ const restaurantsSlice = createSlice({
     },
   });
 
-  export const { addRestaurant, deleteRestaurant, updateRestaurant, editRestaurant, setRestaurants } =
+  export const { addRestaurant, deleteRestaurant, updateRestaurant, editRestaurant, setRestaurants, setCurrentRestaurant } =
       restaurantsSlice.actions;
   export default restaurantsSlice.reducer;

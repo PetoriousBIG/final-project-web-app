@@ -13,7 +13,7 @@ export const fetchMenuItemById = async (id: String) => {
     return response.data;
 }
 
-export const fetchMenuItemByRestaurant = async (restaurant_id: String) => {
+export const fetchMenuItemsByRestaurant = async (restaurant_id: String) => {
     const response = await axios.get(`${MENU_API}`, {
         params: {
             restaurant_id: restaurant_id
@@ -22,7 +22,7 @@ export const fetchMenuItemByRestaurant = async (restaurant_id: String) => {
     return response.data;
 }
 
-export const fetchMenuItemByChef = async (chef_id: String) => {
+export const fetchMenuItemsByChef = async (chef_id: String) => {
     const response = await axios.get(`${MENU_API}`, {
         params: {
             chef_id: chef_id
