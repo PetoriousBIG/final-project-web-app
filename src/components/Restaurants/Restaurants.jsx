@@ -56,15 +56,16 @@ function Restaurants() {
   return (
     <div>
       {/* Restaurant Page Section */}
-      <br />
-      <br />
-      <br />
+    
       <section id="restaurant-page" className="restaurant-page section">
+      <br />
+      <br />
         {/* Section Title */}
         <div className="container section-title" data-aos="fade-up">
           <h2>Restaurants</h2>
           <p>Check out all best vegan restaurants in Boston!</p>
         </div>{/* End Section Title */}
+        
         <div className="container">
           <div className="row gy-5">
             {restaurants.map((restaurant, index) => (

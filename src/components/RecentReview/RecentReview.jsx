@@ -24,6 +24,7 @@ function RecentReview() {
           <h2>VeganLover</h2>
           <p>Recent Reviews</p>
         </div>{/* End Section Title */}
+        
         <div className="container" data-aos="fade-up" data-aos-delay={100}>
           <Swiper
             spaceBetween={20}

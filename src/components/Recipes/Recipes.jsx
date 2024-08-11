@@ -3,8 +3,9 @@ import React from 'react';
 function Recipes() {
   return (
     <div>
-        <br/>
       <section id="recipe" className="recipe section">
+      <br/>
+
         {/* Section Title */}
         <div className="container section-title" data-aos="fade-up">
           <h2>Recipe</h2>
@@ -14,6 +15,7 @@ function Recipes() {
             <button type="submit" className="btn btn-primary">Search</button>
           </form>
         </div>{/* End Section Title */}
+        
         <div className="container-fluid" data-aos="fade-up" data-aos-delay={100}>
           <div className="row g-0">
             <div className="col-lg-3 col-md-4">

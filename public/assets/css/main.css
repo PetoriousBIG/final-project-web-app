@@ -616,6 +616,39 @@ h6 {
   font-family: var(--heading-font);
 }
 
+.footer-links {
+  margin-bottom: 30px;
+  ul{
+    list-style: none;
+    padding: 0;
+    margin: 0;
+
+    i {
+      padding-right: 2px;
+      font-size: 12px;
+      line-height: 0;
+    }
+
+    li {
+      padding: 10px 0;
+      &:first-child {
+        padding-top: 0;
+      }
+      display: flex;
+      align-items: center;
+    }
+
+    a {
+      color: color-mix(in srgb, var(--default-color), transparent 30%);
+      display: inline-block;
+      line-height: 1;
+      &:hover {
+        color: var(--accent-color);
+      }
+    }
+  }
+}
+
 /*--------------------------------------------------------------
 # Preloader
 --------------------------------------------------------------*/
