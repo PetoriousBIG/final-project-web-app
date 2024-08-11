@@ -45,7 +45,11 @@ function App() {
               <Route path="/restaurants" element={<Restaurants />} />
               <Route path="/restaurants/:rid" element={<RestaurantDetail />} /> 
               <Route path="/restaurants/:rid/menu" element={<Menu />} />
-              <Route path="/restaurants/:rid/menu/:mid" element={<MenuDetail />} /> 
+              <Route path="/restaurants/:rid/menu/:mid" element={<MenuDetail />} />
+
+              <Route path="/recipes" element={<Recipes />} />
+              <Route path="/search" element={<SearchResults />} />
+              <Route path="/recipe/:id" element={<RecipeDetail />} />
 
               {/* Route for the owner's profile */}
               <Route path="/profile" element={<SelfProfile />} />
