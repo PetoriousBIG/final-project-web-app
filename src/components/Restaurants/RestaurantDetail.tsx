@@ -189,17 +189,18 @@ function RestaurantDetail() {
       <ReplyComment show={showReplyForm} handleClose={() => setShowReplyForm(false)} />
       <Confirmation show={showDeleteConfirmation} 
                     handleClose={() => setShowDeleteConfirmation(false)}
-                    handleDelete={() => handleDelete()}/>
+                    handleDelete={() => handleDelete()}
+                    text={"restaurant"}/>
+
       <Add show={showEditForm}
             handleClose={() => {
               setShowEditForm(false)
             }}
             editing={true}
             refresh={fetchRestaurant}
-            rid={currentRestaurant && currentRestaurant._id}
             users={users}
-            owner_id={currentUser._id}
-            owner={currentUser.firstName.concat(" ", currentUser.lastName)}/>
+            owner_id={currentUser && currentUser._id}
+            owner={currentUser && currentUser.firstName.concat(" ", currentUser.lastName)}/>
 
       
     </div>

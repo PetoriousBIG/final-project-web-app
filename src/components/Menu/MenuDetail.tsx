@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, useNavigate, Link } from 'react-router-dom';
 import Swiper from 'swiper';
 import { Navigation, Pagination } from 'swiper/modules';
 import 'swiper/css';
@@ -9,14 +9,42 @@ import Review from '../Review/Review';
 import ReplyComment from '../Review/ReplyComment';
 import { useSelector, useDispatch } from 'react-redux';
 import * as reviewClient from "../Review/client";
+import * as menuClient from "./client";
 import { setReviews } from '../Review/reducer';
+import { setCurrentMenuItem, deleteMenuItem } from './reducer';
+import Confirmation from '../Confirmation';
+import Add from './Add';
 
 function MenuDetail() {
+  const [key, setKey] = useState(1)
   const { rid, iid } = useParams();
-
+  const navigate = useNavigate()
   const dispatch = useDispatch();
   const [showReviewForm, setShowReviewForm] = useState(false);
   const [showReplyForm, setShowReplyForm] = useState(false);
+  const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
+  const [showEditForm, setShowEditForm] = useState(false);
+
+  const fetchMenuItem = async () => {
+      try {
+        const menuItem = await menuClient.fetchMenuItemById(iid);
+        dispatch(setCurrentMenuItem(menuItem));
+      } catch (err: any) {
+        console.log(err)
+      }
+  }
+
+  const handleDelete = async () => {
+    try {
+        console.log("Code got here")
+        const status = await menuClient.deleteMenuItem(iid);
+        dispatch(deleteMenuItem(iid));
+    } catch (err: any) {
+        console.log(err)
+    }
+    setShowDeleteConfirmation(false);
+    navigate(-1)
+}
 
   const fetchReviews = async (menuItemId) => {
       try {
@@ -28,11 +56,14 @@ function MenuDetail() {
   }
   useEffect(() => {
       fetchReviews(iid);
+      fetchMenuItem();
   }, [])
-  const { menuItems } = useSelector((state: any) => state.menuItemReducer)
-  const currentMenuItem = useSelector((state: any) => state.menuItemReducer.menuItems.find((menuItem: any) => menuItem._id === iid))   
+
+  const { currentMenuItem } = useSelector((state: any) => state.menuItemReducer)   
   const { reviews } = useSelector((state:any) => state.reviewReducer);
   const { currentUser } = useSelector((state:any) => state.accountReducer);
+
+  console.log(`CMU: ${currentMenuItem}`)
 
   useEffect(() => {
     Swiper.use([Navigation, Pagination]);
@@ -58,7 +89,7 @@ function MenuDetail() {
       <div id={`comment-${comment.id}`} className="comment" key={comment.id}>
         <div className="d-flex">
           <div className="comment-img">
-            <img src={`${process.env.PUBLIC_URL}/assets/img/comments/comments-${comment.id}.jpg`} alt={`Commenter ${comment.id}`} />
+            <img src={`${process.env.PUBLIC_URL}/assets/img/generic/generic_user.jpg`} alt={`Commenter ${comment.id}`} />
           </div>
           <div>
             <h5>
@@ -88,11 +119,9 @@ function MenuDetail() {
             <div className="col-lg-6">
               <div className="menu-carousel swiper-container">
                 <div className="swiper-wrapper">
-                  { currentMenuItem && currentMenuItem.images.map((image, index) => (
-                    <div className="swiper-slide" key={index}>
-                      <img src={image} alt={`Dish view ${index + 1}`} />
+                    <div className="swiper-slide" key="food">
+                      <img src={`${process.env.PUBLIC_URL}/assets/img/generic/generic_food.jpg`} alt={`Dish view 1`} />
                     </div>
-                  ))}
                 </div>
                 <div className="swiper-pagination" />
                 <div className="swiper-button-next" />
@@ -101,7 +130,7 @@ function MenuDetail() {
             </div>
             <div className="col-lg-6">
               <div className="chef-info">
-                <img src={`${process.env.PUBLIC_URL}/assets/img/chefs/chef.jpg`} className="chef-img" alt="Chef" />
+                <img src={`${process.env.PUBLIC_URL}/assets/img/generic/generic_user.jpg`} className="chef-img" alt="Chef" />
                 <h3>{currentMenuItem && currentMenuItem.chef_name}</h3>
                 <p>{currentMenuItem && currentMenuItem.chefs_intro}</p>
                 <Link to={`/menu/${rid}`} className="btn btn-primary mt-3">View Full Menu</Link>
@@ -111,14 +140,33 @@ function MenuDetail() {
           <div className="comments-section mt-5">
             <div className="d-flex justify-content-between align-items-center mb-3">
               <h4 className="comments-count">{reviews ? reviews.length : 0} Comments</h4>
-              
-              {currentUser && 
+
+              {currentUser && currentUser.role === 'User' &&
                 <button 
                   type="button"
                   className="btn btn-primary"
                   onClick={() => setShowReviewForm(true)}>
                   Write a Review
                 </button>
+              }
+
+              {currentUser && currentMenuItem && currentUser._id === currentMenuItem.chef_id &&
+                <div>
+                  <button type="button"
+                    className='btn btn-primary me-3'
+                    onClick={() => setShowEditForm(true)}>
+                    Edit Dish
+                  </button>
+
+                  <button type="button"
+                  className='btn btn-primary'
+                  onClick={() => {
+                    setShowDeleteConfirmation(true)
+                    }}>
+                    Delete Dish
+                  </button>
+
+                </div>
               }
             </div>
             {reviews && renderComments(reviews)}
@@ -132,6 +180,21 @@ function MenuDetail() {
               reviewer_id={currentUser ? currentUser._id : 0}
               reviewer_name={currentUser ? currentUser.firstName.concat(" ", currentUser.lastName) : "Dummy Name"}/>
       <ReplyComment show={showReplyForm} handleClose={() => setShowReplyForm(false)} />
+      <Confirmation show={showDeleteConfirmation} 
+                    handleClose={() => setShowDeleteConfirmation(false)}
+                    handleDelete={() => handleDelete()}
+                    text={"dish"}/>
+
+      <Add show={showEditForm}
+           handleClose={() => {
+             setShowEditForm(false)
+           }}
+           editing={true}
+           refresh={fetchMenuItem}
+           chef_id={currentUser && currentUser._id}
+           chef={currentUser && currentUser.firstName.concat(" ", currentUser.lastName)}
+           restaurant_id={rid}/>
+
     </div>
   );
 }

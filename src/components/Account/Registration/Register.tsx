@@ -21,17 +21,13 @@ function Register({ show, handleClose }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     try {  
       const currentUser = await client.signup(formData);
       dispatch(setCurrentUser(currentUser));
-      handleClose()
     } catch (err: any) {
       console.log(err.response.data.message);
     };
-
-    console.log(formData);
-    handleClose(); 
+    handleClose()
   };
 
   return (
@@ -90,7 +86,7 @@ function Register({ show, handleClose }) {
             </Form.Control>
           </Form.Group>
           
-          <Button variant="primary" type="button" className="btn btn-block mb-4">
+          <Button variant="primary" type="button" className="btn btn-block mb-4" onClick={handleSubmit}>
             Sign up
           </Button>
          

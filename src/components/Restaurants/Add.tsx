@@ -1,16 +1,19 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Modal } from 'react-bootstrap';
 import * as client from "./client";
 import { addRestaurant, updateRestaurant } from './reducer';
 import { useDispatch, useSelector } from 'react-redux';
 
-const Add = ({show, handleClose, refresh, users, rid, editing, owner, owner_id}) => {
+const Add = ({show, handleClose, refresh, users, editing, owner, owner_id}) => {
+    const [restaurant, setRestaurant] = useState<any>(null)
+    const dispatch = useDispatch();
     const {currentRestaurant} = useSelector((state: any) => state.restaurantReducer)   
 
-    const initialState = editing ? currentRestaurant : 
-        {owner: owner, owner_id: owner_id, description: "", introduction: "", name: "", rating: 0,chefs: []} 
-    const [restaurant, setRestaurant] = useState<any>(initialState);
-    const dispatch = useDispatch();
+    useEffect(() => {
+      const state = editing ? currentRestaurant : 
+      {owner: owner, owner_id: owner_id, description: "", introduction: "", name: "", rating: 0, chef_ids: []} 
+      setRestaurant(state)
+    })
 
     const handleSubmit = async () => {
         try {
@@ -23,11 +26,9 @@ const Add = ({show, handleClose, refresh, users, rid, editing, owner, owner_id})
     }
 
     const performAncillaryActionsForClose = async () => {
-        if (!editing) {
-            setRestaurant({...restaurant, 
+        setRestaurant({...restaurant, 
                 description: "", introduction: "", name: "",
                 chefs: []})
-        }
         handleClose();
     }
 
@@ -49,25 +50,25 @@ const Add = ({show, handleClose, refresh, users, rid, editing, owner, owner_id})
 
             <div className="form-group mt-3">
               <label htmlFor="restaurant-name">Restaurant name</label>
-              <input className='form-control' id='restaurant-name' value={restaurant.name} 
+              <input className='form-control' id='restaurant-name' value={restaurant && restaurant.name} 
                      onChange={(e) => setRestaurant({...restaurant, name: e.target.value})}/>
             </div>
 
             <div className="form-group mt-3">
               <label htmlFor="restaurant-description">Description</label>
-              <textarea id="restaurant-description" className='form-control' value={restaurant.description}
+              <textarea id="restaurant-description" className='form-control' value={restaurant && restaurant.description}
                         onChange={(e) => setRestaurant({...restaurant, description: e.target.value})}/>
             </div>
 
             <div className='form-group mt-3'>
               <label htmlFor="restaurant-owner-intro">Owner Intro</label>
-              <textarea id="restaurant-owner-intro" className='form-control' value={restaurant.introduction}
+              <textarea id="restaurant-owner-intro" className='form-control' value={restaurant && restaurant.introduction}
                         onChange={(e) => setRestaurant({...restaurant, introduction: e.target.value})}/>
             </div>
 
             <div className='form-group mt-3'>
                 <label htmlFor="restaurant-chefs">Chefs</label>
-                <select id="restaurant-chefs" className='form-control' multiple value={restaurant.chefs}
+                <select id="restaurant-chefs" className='form-control' multiple value={restaurant && restaurant.chef_ids}
                 onChange={(e) => { 
                         const target = e.target
                         let value = Array.from(target.selectedOptions, option => option.value)

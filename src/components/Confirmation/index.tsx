@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import { Modal } from 'react-bootstrap';
 
-const Confirmation = ({show, handleClose, handleDelete}) => {
+const Confirmation = ({show, handleClose, handleDelete, text}) => {
     const [buttonEnabled, setButtonEnabled] = useState(false)
 
     return (
@@ -13,7 +13,7 @@ const Confirmation = ({show, handleClose, handleDelete}) => {
         </Modal.Header>
         <Modal.Body>
             <p>
-              You are about to permanently delete your restaurant.
+              You are about to permanently delete your {text}.
               Check the box below to enable deletion:
             </p>
             <input type="checkbox" id='delete-confirm'
@@ -24,7 +24,7 @@ const Confirmation = ({show, handleClose, handleDelete}) => {
                 Get me out of here!
             </button>
             <button className='btn btn-danger' onClick={handleDelete} disabled={!buttonEnabled}>
-                Yes, delete my restaurant.
+                Yes, delete my {text}.
             </button>
         </Modal.Footer>
       </Modal>

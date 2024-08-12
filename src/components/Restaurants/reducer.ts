@@ -24,7 +24,7 @@ const restaurantsSlice = createSlice({
                 owner_id: restaurant.owner_id,
                 owner: restaurant.owner,
                 introduction: restaurant.introduction,
-                chefs: restaurant.chefs,
+                chef_ids: restaurant.chef_ids,
             };
             state.restaurants = [...state.restaurants, newRestaurant] as any;
         },

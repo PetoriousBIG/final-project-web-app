@@ -6,7 +6,6 @@ import * as accountClient from "../Account/client";
 import { setUsers } from '../Account/reducer';
 import { setRestaurants } from './reducer';
 import Add from "./Add";
-import { current } from '@reduxjs/toolkit';
 function Restaurants() {
   const dispatch = useDispatch()
   const [showAddForm, setShowAddForm] = useState(false);
@@ -88,7 +87,6 @@ function Restaurants() {
             }}
             editing={false}
             refresh={fetchRestaurants}
-            rid={-1}
             users={users}
             owner_id={currentUser._id}
             owner={currentUser.firstName.concat(" ", currentUser.lastName)}/>
