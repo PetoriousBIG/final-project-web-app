@@ -54,7 +54,9 @@ function Header() {
                 Sign Out
               </button>
             }
-            <a className="btn-border-text d-none d-xl-block" href="#profile">Profile</a>
+            { currentUser && 
+              <a className="btn-border-text d-none d-xl-block" href="/profile">Profile</a>
+            }
           </div>
         </div>
       </div>

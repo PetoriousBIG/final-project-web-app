@@ -32,3 +32,8 @@ export const fetchUsersForRole = async (role: String) => {
     });
     return response.data;
 }
+
+export const updateUser = async (user: any) => {
+    const response = await axios.put(`${USERS_API}/${user._id}`, user);
+    return response.data;
+}

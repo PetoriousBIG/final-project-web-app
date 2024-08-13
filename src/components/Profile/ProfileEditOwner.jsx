@@ -1,11 +1,27 @@
 import React, { useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import * as client from "../Account/client"
+import { setCurrentUser } from '../Account/reducer';
 
 function ProfileEditOwner() {
-  const [activeForm, setActiveForm] = useState('personal-info')
-
+  const { currentUser } = useSelector((state) => state.accountReducer);
+  const [user, setUser] = useState(currentUser);
+  const [activeForm, setActiveForm] = useState('personal-info');
+  const dispatch = useDispatch();
   const showForm = (formName) => {
     setActiveForm(formName)
   }
+
+  const handleSave = async (e) => {
+      e.preventDefault()
+      try {
+          const status = await client.updateUser(user)
+          dispatch(setCurrentUser(user));
+          
+      }   catch ( err ) {
+          console.log(err);
+      }
+    }
 
   return (
     <div>
@@ -22,7 +38,7 @@ function ProfileEditOwner() {
                   <label htmlFor="profile-upload" className="upload-btn">Upload</label>
                 </div>
                 <div className="profile-info">
-                  <h2 id="user-name">John Doe</h2>
+                  <h2 id="user-name">{user.firstName} {user.lastName}</h2>
                   <br />
                   <p id="user-role">Role: Owner</p>
                 </div>
@@ -57,39 +73,51 @@ function ProfileEditOwner() {
 
           <div className="col-lg-7">
             {activeForm === 'personal-info' && (
-              <form action="forms/contact.php" method="post" className="php-email-form">
+              <form className="php-email-form">
                 <div className="row">
                   <div className="col-md-6 form-group">
                     <label htmlFor="firstName">First Name</label>
-                    <input type="text" name="firstName" className="form-control" id="firstName" required />
+                    <input type="text" name="firstName" className="form-control" id="firstName" required value={user.firstName}
+                      onChange={(e) => setUser({...user, firstName: e.target.value})}/>
                   </div>
                   <div className="col-md-6 form-group">
                     <label htmlFor="lastName">Last Name</label>
-                    <input type="text" name="lastName" className="form-control" id="lastName" required />
+                    <input type="text" name="lastName" className="form-control" id="lastName" required value={user.lastName}
+                      onChange={(e) => setUser({...user, lastName: e.target.value})}/>
                   </div>
                 </div>
                 <div className="form-group mt-3">
                   <label htmlFor="username">Username</label>
-                  <input type="text" className="form-control" name="username" id="username" required />
+                  <input type="text" className="form-control" name="username" id="username" required value={user.username}
+                    onChange={(e) => setUser({...user, username: e.target.value})}/>
                 </div>
                 <div className="form-group mt-3">
                   <label htmlFor="email">Email Address</label>
-                  <input type="email" className="form-control" name="email" id="email" required />
+                  <input type="email" className="form-control" name="email" id="email" required value={user.email}
+                    onChange={(e) => setUser({...user, email: e.target.value})}/>
                 </div>
                 <div className="form-group mt-3">
                   <label htmlFor="organization">Organization Name</label>
-                  <input type="text" className="form-control" name="organization" id="organization" placeholder="If you are a restaurant owner or chef" />
+                  <input type="text" className="form-control" name="organization" id="organization" placeholder="If you are a restaurant owner or chef" value={user.org}
+                    onChange={(e) => setUser({...user, org: e.target.value})}/>
                 </div>
                 <div className="form-group mt-3">
                   <label htmlFor="phone">Phone Number</label>
-                  <input type="text" className="form-control" name="phone" id="phone" required />
+                  <input type="text" className="form-control" name="phone" id="phone" required value={user.phone}
+                    onChange={(e) => setUser({...user, phone: e.target.value})}/>
                 </div>
                 <div className="form-group mt-3">
                   <label htmlFor="birthday">Birthday</label>
-                  <input type="date" className="form-control" name="birthday" id="birthday" required />
+                  <input type="date" className="form-control" name="birthday" id="birthday" required value={user.dob}
+                    onChange={(e) => setUser({...user, dob: e.target.value})}/>
+                </div>
+                <div className="form-group mt-3">
+                  <label htmlFor="bio">Bio</label>
+                  <input type="text" className="form-control" name="bio" id="bio" required value={user.bio}
+                    onChange={(e) => setUser({...user, bio: e.target.value})}/>
                 </div>
                 <br />
-                <div className="text-center"><button type="submit">Save changes</button></div>
+                <div className="text-center"><button className="btn" style={{backgroundColor: "#daa520"}} onClick={handleSave}>Save changes</button></div>
               </form>
           )}
 

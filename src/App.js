@@ -26,6 +26,7 @@ import Teams from './components/Teams/Teams';
 import 'aos/dist/aos.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';
+import ProtectedRoute from './ProtectedRoute';
 
 function App() {
   useEffect(() => {
@@ -52,14 +53,16 @@ function App() {
               <Route path="/recipe/:id" element={<RecipeDetail />} />
 
               {/* Route for the owner's profile */}
-              <Route path="/profile" element={<SelfProfile />} />
+              <Route path="/profile" element={<ProtectedRoute><SelfProfile /></ProtectedRoute>} />
         
               {/* Route for viewing another user's profile */}
-              <Route path="/profile/:id" element={<OtherProfile />} />
+              <Route path="/profile/:id" element={<ProtectedRoute><OtherProfile /></ProtectedRoute>} />
 
-              <Route path="/profile-edit-chef" element={<ProfileEditChef />} />
-              <Route path="/profile-edit-owner" element={<ProfileEditOwner />} />
-              <Route path="/profile-edit-user" element={<ProfileEditUser />} />
+              
+              <Route path="/profile-edit-chef" element={<ProtectedRoute><ProfileEditChef /></ProtectedRoute> } />
+              <Route path="/profile-edit-owner" element={<ProtectedRoute><ProfileEditOwner /></ProtectedRoute> } />
+              <Route path="/profile-edit-user" element={<ProtectedRoute><ProfileEditUser /></ProtectedRoute> } />
+         
         
               <Route path="/teams" element={<Teams />} />
               <Route path="*" element={<Home />} />

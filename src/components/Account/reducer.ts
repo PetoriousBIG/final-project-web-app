@@ -13,7 +13,8 @@ const accountSlice = createSlice({
 
         setCurrentUser: (state, action) => {
             state.currentUser = action.payload;
-    },
+            console.log(JSON.stringify(state.currentUser))
+        },
   },
 });
 

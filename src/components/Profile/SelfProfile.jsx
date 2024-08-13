@@ -1,5 +1,7 @@
 import React from 'react'
 import { Swiper, SwiperSlide } from 'swiper/react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router';
 import 'swiper/css';
 import 'swiper/css/pagination';
 import 'swiper/css/navigation';
@@ -8,10 +10,14 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import { Autoplay, Pagination, Navigation } from 'swiper/modules';
 
-// Mock user data for roles
-const userRole = 'user'; // Change this to 'user', 'owner', or 'chef' to see different sections
-
 function SelfProfile() {
+  const { currentUser } = useSelector((state) => state.accountReducer)
+  const navigate = useNavigate();
+  
+  const goToEditPage = () => {
+      navigate(`/profile-edit-${currentUser.role}`);
+  }
+
   return (
     <div>
       <section id="about" className="about section">
@@ -22,20 +28,20 @@ function SelfProfile() {
         <div className="container" data-aos="fade-up" data-aos-delay={100}>
           <div className="row gy-4 justify-content-center">
             <div className="col-lg-4">
-              <img src="assets/img/profile-img.jpg" className="img-fluid" alt="Profile" />
+              <img src={`${process.env.PUBLIC_URL}/assets/img/generic/generic_user.jpg`} className="img-fluid" alt="Profile" />
             </div>
             <div className="col-lg-8 content">
-              <h2>Name&nbsp;</h2>
-              <p className="fst-italic py-3">User</p>
+              <h2>{currentUser.firstName} {currentUser.lastName}&nbsp;</h2>
+              <p className="fst-italic py-3">{currentUser.role}</p>
               <div className="row">
                 <div className="col-lg-6">
                   <ul>
-                    <li><i className="bi bi-chevron-right" /> <strong>Phone:</strong> <span>+123 456 7890</span></li>
+                    <li><i className="bi bi-chevron-right" /> <strong>Phone:</strong> <span>{currentUser.phone}</span></li>
                   </ul>
                 </div>
                 <div className="col-lg-6">
                   <ul>
-                    <li><i className="bi bi-chevron-right" /> <strong>Email:</strong> <span>email@example.com</span></li>
+                    <li><i className="bi bi-chevron-right" /> <strong>Email:</strong> <span>{currentUser.email}</span></li>
                   </ul>
                 </div>
               </div>
@@ -43,12 +49,12 @@ function SelfProfile() {
                 <br />
                 <h2>About&nbsp;</h2>
                 <p className="py-3">
-                  This is where users fill in their introduction displays.
+                  {currentUser.bio}
                 </p>
                 <br />
                 <br />
                 <br />
-                <button type="submit" className="btn btn-primary">Edit profile</button>
+                <button type="submit" onClick={goToEditPage} className="btn btn-primary">Edit profile</button>
               </div>
             </div>
           </div>
@@ -56,7 +62,7 @@ function SelfProfile() {
       </section>
 
       {/* Conditional Rendering Based on Role */}
-      {userRole === 'user' && (
+      {currentUser.role === 'User' && (
         <section id="recent-review" className="recent-review section">
           <div className="container section-title" data-aos="fade-up">
             <h2>VeganLover</h2>
@@ -68,6 +74,10 @@ function SelfProfile() {
               slidesPerView={1}
               autoplay={{ delay: 5000 }}
               breakpoints={{
+                640: {
+                  slidesPerView: 1,
+                  spaceBetween: 10,
+                  },  
                 768: {
                   slidesPerView: 2,
                   spaceBetween: 20,
@@ -89,7 +99,7 @@ function SelfProfile() {
                     <span>Absolutely loved the food and ambiance. Highly recommend the vegan burger!(comment from this user)</span>
                     <i className="bi bi-quote quote-icon-right" />
                   </p>
-                  <img src="assets/img/restaurants/restaurant-1.jpg" className="testimonial-img" alt="Vegan Delight" />
+                  {/* <img src={`${process.env.PUBLIC_URL}/assets/img/generic/generic_restaurant.jpg`} className="testimonial-img" alt="Vegan Delight" /> */}
                   <h3>Vegan Delight</h3>
                   <h4>123 Beacon Street, Boston, MA 02108</h4>
                 </div>
@@ -101,7 +111,7 @@ function SelfProfile() {
                     <span>Great place for a healthy meal, but the service was a bit slow.</span>
                     <i className="bi bi-quote quote-icon-right" />
                   </p>
-                  <img src="assets/img/restaurants/restaurant-2.jpg" className="testimonial-img" alt="Green Garden Bistro" />
+                  <img src={`${process.env.PUBLIC_URL}/assets/img/generic/generic_restaurant.jpg`} className="testimonial-img" alt="Green Garden Bistro" />
                   <h3>Green Garden Bistro</h3>
                   <h4>456 Commonwealth Avenue, Boston, MA 02215</h4>
                 </div>
@@ -113,7 +123,7 @@ function SelfProfile() {
                     <span>The vegan pizza was fantastic, but the place was a bit crowded.</span>
                     <i className="bi bi-quote quote-icon-right" />
                   </p>
-                  <img src="assets/img/restaurants/restaurant-3.jpg" className="testimonial-img" alt="The Vegan Table" />
+                  {/* <img src={`${process.env.PUBLIC_URL}assets/img/generic/generic_restaurant.jpg`} className="testimonial-img" alt="The Vegan Table" /> */}
                   <h3>The Vegan Table</h3>
                   <h4>789 Tremont Street, Boston, MA 02118</h4>
                 </div>
@@ -125,7 +135,7 @@ function SelfProfile() {
                     <span>Best vegan dishes I've ever had. The desserts are to die for!</span>
                     <i className="bi bi-quote quote-icon-right" />
                   </p>
-                  <img src="assets/img/restaurants/restaurant-4.jpg" className="testimonial-img" alt="Purely Plant-Based" />
+                  {/* <img src={`${process.env.PUBLIC_URL}/assets/img/generic/generic_restaurant.jpg`} className="testimonial-img" alt="Purely Plant-Based" /> */}
                   <h3>Purely Plant-Based</h3>
                   <h4>101 Newbury Street, Boston, MA 02148</h4>
                 </div>
@@ -135,10 +145,10 @@ function SelfProfile() {
         </section>
       )}
 
-      {userRole === 'owner' && (
+      {currentUser.role === 'Owner' && (
         <section id=".recent-review" className=".recent-review section">
           <div className="container section-title" data-aos="fade-up">
-            <h2>Restaurants Owned by XXX</h2>
+            <h2>Restaurants Owned by {currentUser.firstName} {currentUser.lastName}</h2>
             <p>Restaurants You Own</p>
           </div>
           <div className="container" data-aos="fade-up" data-aos-delay={100}>
@@ -147,6 +157,10 @@ function SelfProfile() {
               slidesPerView={1}
               autoplay={{ delay: 5000 }}
               breakpoints={{
+                640: {
+                  slidesPerView: 1,
+                  spaceBetween: 10,
+                  },  
                 768: {
                   slidesPerView: 2,
                   spaceBetween: 20,
@@ -168,7 +182,7 @@ function SelfProfile() {
                     <span>Vegan Delight is a cozy place offering a wide range of vegan delights.</span>
                     <i className="bi bi-quote quote-icon-right" />
                   </p>
-                  <img src="assets/img/restaurants/restaurant-1.jpg" className="testimonial-img" alt="Vegan Delight" />
+                  {/* <img src={`${process.env.PUBLIC_URL}/assets/img/generic/generic_restaurant.jpg`} className="testimonial-img" alt="Vegan Delight" /> */}
                   <h3>Vegan Delight</h3>
                   <h4>123 Beacon Street, Boston, MA 02108</h4>
                 </div>
@@ -180,7 +194,7 @@ function SelfProfile() {
                     <span>Green Garden Bistro specializes in fresh and organic vegan cuisine.</span>
                     <i className="bi bi-quote quote-icon-right" />
                   </p>
-                  <img src="assets/img/restaurants/restaurant-2.jpg" className="testimonial-img" alt="Green Garden Bistro" />
+                  {/* <img src={`${process.env.PUBLIC_URL}/assets/generic/generic_restaurant.jpg`} className="testimonial-img" alt="Green Garden Bistro" /> */}
                   <h3>Green Garden Bistro</h3>
                   <h4>456 Commonwealth Avenue, Boston, MA 02215</h4>
                 </div>
@@ -190,7 +204,7 @@ function SelfProfile() {
         </section>
       )}
 
-      {userRole === 'chef' && (
+      {currentUser.role === 'Chef' && (
         <section id=".recent-review" className=".recent-review section">
           <div className="container section-title" data-aos="fade-up">
             <h2>Your Dishes</h2>
@@ -223,7 +237,7 @@ function SelfProfile() {
                     <span>The Vegan Burger is a customer favorite with a delicious plant-based patty.</span>
                     <i className="bi bi-quote quote-icon-right" />
                   </p>
-                  <img src="assets/img/dishes/vegan-burger.jpg" className="testimonial-img" alt="Vegan Burger" />
+                  {/* <img src={`${process.env.PUBLIC_URL}/assets/img/generic/generic_food.jpg`} className="testimonial-img" alt="Vegan Burger" /> */}
                   <h3>Vegan Burger</h3>
                 </div>
               </SwiperSlide>
@@ -234,7 +248,7 @@ function SelfProfile() {
                     <span>The Vegan Pizza is a perfect blend of fresh veggies and vegan cheese.</span>
                     <i className="bi bi-quote quote-icon-right" />
                   </p>
-                  <img src="assets/img/dishes/vegan-pizza.jpg" className="testimonial-img" alt="Vegan Pizza" />
+                  {/* <img src={`${process.env.PUBLIC_URL}/assets/img/generic/generic_food.jpg`} className="testimonial-img" alt="Vegan Pizza" /> */}
                   <h3>Vegan Pizza</h3>
                 </div>
               </SwiperSlide>
