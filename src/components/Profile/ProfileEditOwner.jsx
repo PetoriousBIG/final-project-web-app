@@ -1,5 +1,6 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { useNavigate } from 'react-router-dom';
 import * as client from "../Account/client"
 import { setCurrentUser } from '../Account/reducer';
 
@@ -7,21 +8,37 @@ function ProfileEditOwner() {
   const { currentUser } = useSelector((state) => state.accountReducer);
   const [user, setUser] = useState(currentUser);
   const [activeForm, setActiveForm] = useState('personal-info');
+  const [successMessage, setSuccessMessage] = useState('');
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const showForm = (formName) => {
-    setActiveForm(formName)
-  }
+    setActiveForm(formName);
+  };
+  useEffect(() => {
+    if (currentUser) {
+      setUser(prevUser => ({
+        ...currentUser,
+        dob: currentUser.dob ? new Date(currentUser.dob).toISOString().split('T')[0] : ''
+      }));
+    }
+  }, [currentUser]);
+
 
   const handleSave = async (e) => {
-      e.preventDefault()
-      try {
-          const status = await client.updateUser(user)
-          dispatch(setCurrentUser(user));
-          
-      }   catch ( err ) {
-          console.log(err);
-      }
+    e.preventDefault()
+    try {
+        const updatedUser = await client.updateUser(user)
+        dispatch(setCurrentUser(updatedUser));
+        setSuccessMessage('Changes saved successfully!');
+        setTimeout(() => {
+          setSuccessMessage('');
+        }, 2000);
+    } catch (err) {
+        console.error(err);
+        setSuccessMessage('Failed to update profile. Please try again.');
+        setTimeout(() => setSuccessMessage(''), 3000);
     }
+  }
 
   return (
     <div>
@@ -72,6 +89,11 @@ function ProfileEditOwner() {
           </div>  
 
           <div className="col-lg-7">
+          {successMessage && (
+                <div className="alert alert-success" role="alert">
+                  {successMessage}
+                </div>
+              )}
             {activeForm === 'personal-info' && (
               <form className="php-email-form">
                 <div className="row">

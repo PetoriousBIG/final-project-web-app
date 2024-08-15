@@ -1,26 +1,42 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux'
+import { useNavigate } from 'react-router-dom';
 import * as client from "../Account/client"
 import { setCurrentUser } from '../Account/reducer';
-import { fireEvent } from '@testing-library/react';
 
 function ProfileEditChef() {
   const { currentUser } = useSelector((state) => state.accountReducer);
   const [user, setUser] = useState(currentUser);
   const [activeForm, setActiveForm] = useState('personal-info');
+  const [successMessage, setSuccessMessage] = useState('');
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const showForm = (formName) => {
     setActiveForm(formName);
   };
+  useEffect(() => {
+    if (currentUser) {
+      setUser(prevUser => ({
+        ...currentUser,
+        dob: currentUser.dob ? new Date(currentUser.dob).toISOString().split('T')[0] : ''
+      }));
+    }
+  }, [currentUser]);
+
 
   const handleSave = async (e) => {
     e.preventDefault()
     try {
-        const status = await client.updateUser(user)
-        dispatch(setCurrentUser(user));
-        
-    }   catch ( err ) {
-        console.log(err);
+        const updatedUser = await client.updateUser(user)
+        dispatch(setCurrentUser(updatedUser));
+        setSuccessMessage('Changes saved successfully!');
+        setTimeout(() => {
+          setSuccessMessage('');
+        }, 2000);
+    } catch (err) {
+        console.error(err);
+        setSuccessMessage('Failed to update profile. Please try again.');
+        setTimeout(() => setSuccessMessage(''), 3000);
     }
   }
 
@@ -69,6 +85,11 @@ function ProfileEditChef() {
           </div>  
 
           <div className="col-lg-7">
+          {successMessage && (
+                <div className="alert alert-success" role="alert">
+                  {successMessage}
+                </div>
+              )}
             {activeForm === 'personal-info' && (
               <form action="forms/contact.php" method="post" className="php-email-form">
                 <div className="row">
@@ -114,7 +135,7 @@ function ProfileEditChef() {
                     onChange={(e) => {setUser({...user, bio: e.target.value})}}/>
                 </div>
                 <br />
-                <div className="text-center"><button type="submit">Save changes</button></div>
+                <div className="text-center"><button type="submit" onClick={handleSave}>Save changes</button></div>
               </form>
             )}
 

@@ -1,22 +1,44 @@
-import React, { useState } from 'react'
+import React, { useState , useEffect} from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { useNavigate } from 'react-router-dom';
 import * as client from "../Account/client"
 import { setCurrentUser } from '../Account/reducer';
+
 
 function ProfileEditUser() {
   const { currentUser } = useSelector((state) => state.accountReducer);
   const [user, setUser] = useState(currentUser);
-  const [activeForm, setActiveForm] = useState('personal-info');
+  const [successMessage, setSuccessMessage] = useState('');
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (currentUser) {
+      setUser(prevUser => ({
+        ...currentUser,
+        dob: currentUser.dob ? new Date(currentUser.dob).toISOString().split('T')[0] : ''
+      }));
+    }
+  }, [currentUser]);
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setUser(prevUser => ({ ...prevUser, [name]: value }));
+  };
   
   const handleSave = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
     try {
-        const status = await client.updateUser(user)
-        dispatch(setCurrentUser(user));
-        
-    }   catch ( err ) {
-        console.log(err);
+        const updatedUser = await client.updateUser(user);
+        dispatch(setCurrentUser(updatedUser));
+        setSuccessMessage('Changes saved successfully!');
+        setTimeout(() => {
+          setSuccessMessage('');
+        }, 2000);
+    } catch (err) {
+        console.error(err);
+        setSuccessMessage('Failed to update profile. Please try again.');
+        setTimeout(() => setSuccessMessage(''), 3000);
     }
   }
 
@@ -59,46 +81,59 @@ function ProfileEditUser() {
           </div>  
 
           <div className="col-lg-7">
-            <form className="php-email-form">
-              <div className="row">
-                <div className="col-md-6 form-group">
-                  <label htmlFor="firstName">First Name</label>
-                  <input type="text" name="firstName" className="form-control" id="firstName" required value={user.firstName}
-                    onChange={(e) => setUser({...user, firstName: e.target.value})}/>
+              {successMessage && (
+                <div className="alert alert-success" role="alert">
+                  {successMessage}
                 </div>
-                <div className="col-md-6 form-group">
-                  <label htmlFor="lastName">Last Name</label>
-                  <input type="text" name="lastName" className="form-control" id="lastName" required value={user.lastName}
-                    onChange={(e) => setUser({...user, lastName: e.target.value})}/>
+              )}
+              <form className="php-email-form" onSubmit={handleSave}>
+                <div className="row">
+                  <div className="col-md-6 form-group">
+                    <label htmlFor="firstName">First Name</label>
+                    <input type="text" name="firstName" className="form-control" id="firstName" required 
+                      value={user.firstName}
+                      onChange={handleInputChange} />
+                  </div>
+                  <div className="col-md-6 form-group">
+                    <label htmlFor="lastName">Last Name</label>
+                    <input type="text" name="lastName" className="form-control" id="lastName" required 
+                      value={user.lastName}
+                      onChange={handleInputChange} />
+                  </div>
                 </div>
-              </div>
-              <div className="form-group mt-3">
-                <label htmlFor="username">Username</label>
-                <input type="text" className="form-control" name="username" id="username" required value={user.username}
-                  onChange={(e) => setUser({...user, username: e.target.value})}/>
-              </div>
-              <div className="form-group mt-3">
-                <label htmlFor="email">Email Address</label>
-                <input type="email" className="form-control" name="email" id="email" required value={user.email} 
-                   onChange={(e) => setUser({...user, email: e.target.value})}/>
-              </div>
-              <div className="form-group mt-3">
-                <label htmlFor="birthday">Birthday</label>
-                <input type="date" className="form-control" name="birthday" id="birthday" required value={user.dob}/>
-              </div>
-              <div className="form-group mt-3">
+                <div className="form-group mt-3">
+                  <label htmlFor="username">Username</label>
+                  <input type="text" className="form-control" name="username" id="username" required 
+                    value={user.username}
+                    onChange={handleInputChange} />
+                </div>
+                <div className="form-group mt-3">
+                  <label htmlFor="email">Email Address</label>
+                  <input type="email" className="form-control" name="email" id="email" required 
+                    value={user.email}
+                    onChange={handleInputChange} />
+                </div>
+                <div className="form-group mt-3">
+                  <label htmlFor="dob">Birthday</label>
+                  <input type="date" className="form-control" name="dob" id="dob" onChange={handleInputChange} />
+                </div>
+                <div className="form-group mt-3">
                   <label htmlFor="bio">Bio</label>
-                  <input type="text" className="form-control" name="bio" id="bio" required value={user.bio}
-                    onChange={(e) => setUser({...user, bio: e.target.value})}/>
-              </div>
-              <br />
-              <div className="text-center"><button className="btn" style={{backgroundColor: "#daa520"}} onClick={handleSave}>Save changes</button></div>
-            </form>
+                  <input type="text" className="form-control" name="bio" id="bio" required 
+                    value={user.bio}
+                    onChange={handleInputChange} />
+                </div>
+                <br />
+                <div className="text-center">
+                  <button type="submit" className="btn" style={{backgroundColor: "#daa520"}}>
+                    Save changes
+                  </button>
+                </div>
+              </form>
+            </div>
           </div>
         </div>
-      </div>
-    </section>
-
+      </section>
     </div>
   )
 }

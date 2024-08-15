@@ -12,13 +12,14 @@ import 'bootstrap-icons/font/bootstrap-icons.css';
 import * as client from './client';
 import { Autoplay, Pagination, Navigation } from 'swiper/modules';
 
+
 function SelfProfile() {
-  const { currentUser } = useSelector((state) => state.accountReducer)
+  const currentUser = useSelector((state) => state.accountReducer.currentUser);
   const navigate = useNavigate();
   const [recentComments, setRecentComments] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
-  
+
   useEffect(() => {
     const fetchRecentComments = async () => {
       if (currentUser && currentUser._id) {
@@ -64,7 +65,7 @@ function SelfProfile() {
     const fullRecipeId = `http://www.edamam.com/ontologies/edamam.owl#${recipeId}`;
     navigate(`/recipe/${encodeURIComponent(fullRecipeId)}`);  
   };
-  
+
   // Check if user is logged in
   if (!currentUser) {
     return <Navigate to="/login" />;

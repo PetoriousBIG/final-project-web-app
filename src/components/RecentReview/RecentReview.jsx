@@ -8,14 +8,19 @@ import 'aos/dist/aos.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import { Autoplay, Pagination, Navigation } from 'swiper/modules';
+import { useSelector } from 'react-redux';
 
 function RecentReview() {
+  const currentUser = useSelector((state) => state.accountReducer.currentUser);
+
   useEffect(() => {
     AOS.init({
       duration: 2000,
     });
   }, []);
-
+  if (!currentUser) {
+    return null;
+  }
   return (
     <div>
       <section id="recent-review" className="recent-review section">
