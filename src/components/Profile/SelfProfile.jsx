@@ -1,6 +1,6 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router';
 import 'swiper/css';
 import 'swiper/css/pagination';
@@ -8,15 +8,62 @@ import 'swiper/css/navigation';
 import 'aos/dist/aos.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';
+import * as client from './client';
 import { Autoplay, Pagination, Navigation } from 'swiper/modules';
 
 function SelfProfile() {
   const { currentUser } = useSelector((state) => state.accountReducer)
   const navigate = useNavigate();
+  const [recentComments, setRecentComments] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
   
+  useEffect(() => {
+    const fetchRecentComments = async () => {
+      if (currentUser && currentUser._id) {
+        setIsLoading(true);
+        try {
+          const commentsData = await client.getUserComments(currentUser._id);
+          
+          const commentsWithRecipes = await Promise.all(
+            commentsData.map(async (comment) => {
+              try {
+                const recipeDetails = await client.getRecipeDetails(comment.recipeId);
+                return {
+                  ...comment,
+                  recipeLabel: recipeDetails.label || recipeDetails.name || 'Unknown Recipe'
+                };
+              } catch (error) {
+                console.error(`Error fetching recipe details for comment ${comment._id}:`, error);
+                return {
+                  ...comment,
+                  recipeLabel: 'Unknown Recipe'
+                };
+              }
+            })
+          );
+        
+          setRecentComments(commentsWithRecipes);
+        } catch (error) {
+          console.error("Error fetching recent comments:", error);
+          setError("Failed to load recent comments. Please try again later.");
+        } finally {
+          setIsLoading(false);
+        }
+      }
+    };
+
+    fetchRecentComments();
+  }, [currentUser]);
+
   const goToEditPage = () => {
-      navigate(`/profile-edit-${currentUser.role}`);
+    navigate(`/profile-edit-${currentUser.role}`);
   }
+
+  const handleCommentClick = (recipeId) => {
+    const fullRecipeId = `http://www.edamam.com/ontologies/edamam.owl#${recipeId}`;
+    navigate(`/recipe/${encodeURIComponent(fullRecipeId)}`);  
+  };
 
   return (
     <div>
@@ -63,35 +110,74 @@ function SelfProfile() {
 
       {/* Conditional Rendering Based on Role */}
       {currentUser.role === 'User' && (
-        <section id="recent-review" className="recent-review section">
-          <div className="container section-title" data-aos="fade-up">
-            <h2>VeganLover</h2>
-            <p>Recent Reviews</p>
-          </div>
-          <div className="container" data-aos="fade-up" data-aos-delay={100}>
-            <Swiper
-              spaceBetween={20}
-              slidesPerView={1}
-              autoplay={{ delay: 5000 }}
-              breakpoints={{
-                640: {
-                  slidesPerView: 1,
-                  spaceBetween: 10,
-                  },  
-                768: {
-                  slidesPerView: 2,
-                  spaceBetween: 20,
-                },
-                1200: {
-                  slidesPerView: 3,
-                  spaceBetween: 20,
-                },
-              }}
-              pagination={{ clickable: true }}
-              navigation
-              modules={[Autoplay, Pagination, Navigation]}
-              className="swiper-container"
-            >
+        <>
+         <section id="recent-comments" className="recent-comments section" style={{ backgroundColor: '#1a1a1a', color: '#fff', padding: '50px 0' }}>
+            <div className="container section-title" data-aos="fade-up">
+              <h2 style={{ color: '#d4af37' }}>{currentUser.username.toUpperCase()}</h2>
+              <p style={{ color: '#d4af37', fontSize: '2.5rem', marginBottom: '30px' }}>Recent Comments</p>
+            </div>
+            <div className="container" data-aos="fade-up" data-aos-delay={100}>
+              {isLoading ? (
+                <p style={{ textAlign: 'center', fontSize: '1.2rem', color: '#fff' }}>Loading recent comments...</p>
+              ) : error ? (
+                <p style={{ textAlign: 'center', fontSize: '1.2rem', color: '#fff' }}>{error}</p>
+              ) : recentComments.length === 0 ? (
+                <p style={{ textAlign: 'center', fontSize: '1.2rem', color: '#fff' }}>No comments available. You haven't made any comments yet.</p>
+              ) : (
+                <Swiper
+                  spaceBetween={20}
+                  slidesPerView={1}
+                  autoplay={{ delay: 5000 }}
+                  breakpoints={{
+                    640: { slidesPerView: 1, spaceBetween: 10 },
+                    768: { slidesPerView: 2, spaceBetween: 20 },
+                    1200: { slidesPerView: 3, spaceBetween: 20 },
+                  }}
+                  pagination={{ clickable: true }}
+                  navigation
+                  modules={[Autoplay, Pagination, Navigation]}
+                  className="swiper-container"
+                >
+                  {recentComments.map((comment, index) => (
+                    <SwiperSlide key={index}>
+                      <div className="testimonial-item" 
+                          style={{ backgroundColor: '#2a2a2a', padding: '20px', borderRadius: '10px', cursor: 'pointer' }}
+                          onClick={() => handleCommentClick(comment.recipeId)}>
+                        <p style={{ fontSize: '1.2rem', fontStyle: 'italic', marginBottom: '20px' }}>
+                          <i className="bi bi-quote quote-icon-left" style={{ color: '#d4af37', fontSize: '2rem', marginRight: '10px' }} />
+                          <span>{comment.comment}</span>
+                          <i className="bi bi-quote quote-icon-right" style={{ color: '#d4af37', fontSize: '2rem', marginLeft: '10px' }} />
+                        </p>
+                        <h3 style={{ color: '#fff', marginBottom: '5px' }}>{comment.recipeLabel}</h3>
+                        <h4 style={{ color: '#888' }}>{new Date(comment.createdAt).toLocaleDateString()}</h4>
+                      </div>
+                    </SwiperSlide>
+                  ))}
+                </Swiper>
+              )}
+            </div>
+          </section>
+
+          <section id="recent-review" className="recent-review section">
+            <div className="container section-title" data-aos="fade-up">
+              <h2>VeganLover</h2>
+              <p>Recent Reviews</p>
+            </div>
+            <div className="container" data-aos="fade-up" data-aos-delay={100}>
+              <Swiper
+                spaceBetween={20}
+                slidesPerView={1}
+                autoplay={{ delay: 5000 }}
+                breakpoints={{
+                  640: { slidesPerView: 1, spaceBetween: 10 },
+                  768: { slidesPerView: 2, spaceBetween: 20 },
+                  1200: { slidesPerView: 3, spaceBetween: 20 },
+                }}
+                pagination={{ clickable: true }}
+                navigation
+                modules={[Autoplay, Pagination, Navigation]}
+                className="swiper-container"
+              >
               <SwiperSlide>
                 <div className="testimonial-item">
                   <p>
@@ -143,6 +229,7 @@ function SelfProfile() {
             </Swiper>
           </div>
         </section>
+        </>
       )}
 
       {currentUser.role === 'Owner' && (
