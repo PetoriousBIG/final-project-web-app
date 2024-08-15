@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
     reviews: [],
+    currentReview: null
 };
 const reviewsSlice = createSlice({
     name: "reviews",
@@ -8,6 +9,10 @@ const reviewsSlice = createSlice({
     reducers: {
         setReviews: (state, action) => {
             state.reviews = action.payload;
+        },
+
+        setCurrentReview: (state, action) => {
+            state.currentReview = action.payload;
         },
 
         addReview: (state, {payload: review }) => {
@@ -45,6 +50,6 @@ const reviewsSlice = createSlice({
     },
 });
 
-export const { addReview, deleteReview, updateReview, editReview, setReviews } =
+export const { addReview, deleteReview, updateReview, editReview, setReviews, setCurrentReview } =
     reviewsSlice.actions;
 export default reviewsSlice.reducer;

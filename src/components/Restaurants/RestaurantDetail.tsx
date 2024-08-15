@@ -11,7 +11,7 @@ import ReplyComment from '../Review/ReplyComment';
 import * as restaurantClient from "../Restaurants/client";
 import * as reviewClient from "../Review/client";
 import * as accountClient from "../Account/client";
-import { setReviews } from '../Review/reducer';
+import { setReviews, deleteReview } from '../Review/reducer';
 import Confirmation from '../Confirmation';
 import { deleteRestaurant, setCurrentRestaurant } from './reducer';
 import { setUsers } from '../Account/reducer'
@@ -21,9 +21,11 @@ function RestaurantDetail() {
     const { rid } = useParams();
     const dispatch = useDispatch();
     const [showReviewForm, setShowReviewForm] = useState(false);
-    const [showReplyForm, setShowReplyForm] = useState(false);
     const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
     const [showEditForm, setShowEditForm] = useState(false);
+    const [contentToDelete, setContentToDelete] = useState(null);
+    const [contentId, setContentId] = useState(null);
+    const [currentReview, setCurrentReview] = useState<any>(null);
     const navigate = useNavigate()
 
     const fetchReviews = async (restaurantId) => {
@@ -42,21 +44,22 @@ function RestaurantDetail() {
       } catch (err: any) {
           console.log(err);
       }
-  }
+    }
 
-  const fetchRestaurant = async () => {
-      try {
-          const restaurants = await restaurantClient.fetchRestaurantUsingId(rid);
-          dispatch(setCurrentRestaurant(restaurants));
-      } catch ( err: any ) {
-          console.log(err)
-      }
-  }
-  useEffect(() => {
-      fetchRestaurant();
-      fetchChefs();
-      fetchReviews(rid);
-  }, []);
+    const fetchRestaurant = async () => {
+        try {
+            const restaurants = await restaurantClient.fetchRestaurantUsingId(rid);
+            dispatch(setCurrentRestaurant(restaurants));
+        } catch ( err: any ) {
+            console.log(err)
+        }
+    }
+
+    useEffect(() => {
+        fetchChefs();
+        fetchReviews(rid);
+        fetchRestaurant();
+    }, []);
 
     const { currentRestaurant } = useSelector((state: any) => state.restaurantReducer)   
     const { reviews } = useSelector((state:any) => state.reviewReducer);
@@ -83,39 +86,67 @@ function RestaurantDetail() {
   const renderComments = (comments) => {
     return comments.map(comment => (
       <div id={`comment-${comment._id}`} className="comment" key={comment._id}>
-        <div className="d-flex">
+        <div className="d-flex justify-content-start">
           <div className="comment-img">
             <img src={`${process.env.PUBLIC_URL}/assets/img/profiles/generic-profile.png`} alt={`Commenter ${comment._id}`} />
           </div>
           <div>
             <h5>
-              <span>{comment.reviewer_name}</span>
-              <button 
-                type="button" 
-                className="btn-reply"
-                onClick={() => setShowReplyForm(true)}
-              >
-                <i className="bi bi-reply-fill" /> Reply
-              </button>
+              {currentUser && currentUser._id === comment.reviewer_id ?
+               <a href="/profile"><span>{comment.reviewer_name}</span></a> :
+               <a href={`/profile/${comment.reviewer_id}`}><span>{comment.reviewer_name}</span></a>
+              }
+
+              { currentUser && currentUser._id === comment.reviewer_id &&            
+                <button 
+                  type="button" 
+                  className="btn-reply"
+                  onClick={() => {
+                    setCurrentReview(comment)
+                    setShowReviewForm(true)}}>
+                  <i className="bi bi-trash-fill" />Edit
+                </button>
+              }{" "}
+              { currentUser && currentUser._id === comment.reviewer_id &&
+                <button 
+                  type="button" 
+                  className="btn-reply"
+                  onClick={() => {
+                    setContentId(comment._id);
+                    setContentToDelete("review");
+                    setShowDeleteConfirmation(true)}}>
+                  <i className="bi bi-trash-fill" />Delete
+                </button>
+              }
             </h5>
             <time dateTime={comment.date}>{comment.date}</time>
-            <p>{comment.review_text}</p>
+            <p><strong>{comment.rating}/5</strong>: {comment.review_text}</p>
           </div>
         </div>
-        {comment.comments && renderComments(comment.comments)}
       </div>
     ));
   };
 
   const handleDelete = async () => {
-      try {
-          const status = await restaurantClient.deleteRestaurant(rid);
-          dispatch(deleteRestaurant(rid));
-      } catch (err: any) {
-          console.log(err)
-      }
-      setShowDeleteConfirmation(false);
-      navigate(-1)
+      if (contentToDelete === 'restaurant') {
+          try {
+              const status = await restaurantClient.deleteRestaurant(contentId);
+              dispatch(deleteRestaurant(contentId));
+          } catch (err: any) {
+              console.log(err);
+          };
+            
+          setShowDeleteConfirmation(false);
+          navigate(-1)
+        } else {
+          try {
+            const status = await reviewClient.deleteReview(contentId);
+            dispatch(deleteReview(contentId));
+          } catch (err: any) {
+            console.log(err);
+          };
+          setShowDeleteConfirmation(false);
+        }
   }
 
   return (
@@ -150,7 +181,9 @@ function RestaurantDetail() {
                 <button 
                   type="button"
                   className="btn btn-primary"
-                  onClick={() => setShowReviewForm(true)}>
+                  onClick={() => {
+                      setCurrentReview(null)
+                      setShowReviewForm(true)}}>
                   Write a Review
                 </button>
               }
@@ -167,8 +200,9 @@ function RestaurantDetail() {
                   <button type="button"
                   className='btn btn-primary'
                   onClick={() => {
+                    setContentId(currentRestaurant._id);
+                    setContentToDelete("restaurant");
                     setShowDeleteConfirmation(true)
-
                     }}>
                     Delete Restaurant
                   </button>
@@ -182,15 +216,13 @@ function RestaurantDetail() {
       </section>
       <Review show={showReviewForm} 
               handleClose={() => setShowReviewForm(false)} 
-              content_type={"restaurant"} 
-              content_id={currentRestaurant && currentRestaurant._id} 
-              reviewer_id={currentUser ? currentUser._id : 0} 
-              reviewer_name={currentUser ? currentUser.firstName.concat(" ", currentUser.lastName) : "Dummy Name"}/>
-      <ReplyComment show={showReplyForm} handleClose={() => setShowReplyForm(false)} />
+              review={currentReview}
+              refresh={() => fetchReviews(rid)}
+              content_type={"restaurant"}/>
       <Confirmation show={showDeleteConfirmation} 
                     handleClose={() => setShowDeleteConfirmation(false)}
-                    handleDelete={() => handleDelete()}
-                    text={"restaurant"}/>
+                    handleDelete={handleDelete}
+                    text={contentToDelete}/>
 
       <Add show={showEditForm}
             handleClose={() => {

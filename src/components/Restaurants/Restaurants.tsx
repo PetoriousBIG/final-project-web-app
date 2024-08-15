@@ -68,7 +68,6 @@ function Restaurants() {
                   </div>
                   <div className="meta">
                     <h3 className="restaurant-name">{restaurant.name}</h3>
-                    <span className="restaurant-rating">{restaurant.rating}/5</span>
                   </div>
                   <p>{restaurant.description}</p>
                   <Link to={`/restaurants/${restaurant._id}`} className="more-info stretched-link">

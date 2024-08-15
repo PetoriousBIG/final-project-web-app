@@ -10,20 +10,23 @@ import ReplyComment from '../Review/ReplyComment';
 import { useSelector, useDispatch } from 'react-redux';
 import * as reviewClient from "../Review/client";
 import * as menuClient from "./client";
-import { setReviews } from '../Review/reducer';
+import { setReviews, deleteReview } from '../Review/reducer';
 import { setCurrentMenuItem, deleteMenuItem } from './reducer';
 import Confirmation from '../Confirmation';
 import Add from './Add';
 
 function MenuDetail() {
-  const [key, setKey] = useState(1)
   const { rid, iid } = useParams();
   const navigate = useNavigate()
   const dispatch = useDispatch();
   const [showReviewForm, setShowReviewForm] = useState(false);
   const [showReplyForm, setShowReplyForm] = useState(false);
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
-  const [showEditForm, setShowEditForm] = useState(false);
+  const [showEditForm, setShowEditForm] = useState(false);    
+  const [contentToDelete, setContentToDelete] = useState(null);
+  const [contentId, setContentId] = useState(null);
+  const [currentReview, setCurrentReview] = useState<any>(null);
+
 
   const fetchMenuItem = async () => {
       try {
@@ -35,15 +38,24 @@ function MenuDetail() {
   }
 
   const handleDelete = async () => {
-    try {
-        console.log("Code got here")
-        const status = await menuClient.deleteMenuItem(iid);
-        dispatch(deleteMenuItem(iid));
-    } catch (err: any) {
-        console.log(err)
-    }
-    setShowDeleteConfirmation(false);
-    navigate(-1)
+      if (contentToDelete === 'menu-item') {
+          try {
+              const status = await menuClient.deleteMenuItem(contentId);
+              dispatch(deleteMenuItem(contentId));
+          } catch (err: any) {
+              console.log(err)
+          }
+          setShowDeleteConfirmation(false);
+          navigate(-1)
+      } else {
+        try {
+          const status = await reviewClient.deleteReview(contentId);
+          dispatch(deleteReview(contentId));
+        } catch (err: any) {
+          console.log(err);
+        };
+        setShowDeleteConfirmation(false);
+      }
 }
 
   const fetchReviews = async (menuItemId) => {
@@ -62,8 +74,6 @@ function MenuDetail() {
   const { currentMenuItem } = useSelector((state: any) => state.menuItemReducer)   
   const { reviews } = useSelector((state:any) => state.reviewReducer);
   const { currentUser } = useSelector((state:any) => state.accountReducer);
-
-  console.log(`CMU: ${currentMenuItem}`)
 
   useEffect(() => {
     Swiper.use([Navigation, Pagination]);
@@ -86,30 +96,48 @@ function MenuDetail() {
 
   const renderComments = (comments) => {
     return comments.map(comment => (
-      <div id={`comment-${comment.id}`} className="comment" key={comment.id}>
-        <div className="d-flex">
+      <div id={`comment-${comment._id}`} className="comment" key={comment._id}>
+        <div className="d-flex justify-content-start">
           <div className="comment-img">
-            <img src={`${process.env.PUBLIC_URL}/assets/img/generic/generic_user.jpg`} alt={`Commenter ${comment.id}`} />
+            <img src={`${process.env.PUBLIC_URL}/assets/img/profiles/generic-profile.png`} alt={`Commenter ${comment._id}`} />
           </div>
           <div>
             <h5>
-              <span>{comment.reviewer_name}</span>
-              <button 
-                type="button" 
-                className="btn-reply"
-                onClick={() => setShowReplyForm(true)}
-              >
-                <i className="bi bi-reply-fill" /> Reply
-              </button>
+              {currentUser && currentUser._id === comment.reviewer_id ?
+               <a href="/profile"><span>{comment.reviewer_name}</span></a> :
+               <a href={`/profile/${comment.reviewer_id}`}><span>{comment.reviewer_name}</span></a>
+              }
+
+              { currentUser && currentUser._id === comment.reviewer_id &&            
+                <button 
+                  type="button" 
+                  className="btn-reply"
+                  onClick={() => {
+                    setCurrentReview(comment)
+                    setShowReviewForm(true)}}>
+                  <i className="bi bi-trash-fill" />Edit
+                </button>
+              }{" "}
+              { currentUser && currentUser._id === comment.reviewer_id &&
+                <button 
+                  type="button" 
+                  className="btn-reply"
+                  onClick={() => {
+                    setContentId(comment._id);
+                    setContentToDelete("review");
+                    setShowDeleteConfirmation(true)}}>
+                  <i className="bi bi-trash-fill" />Delete
+                </button>
+              }
             </h5>
             <time dateTime={comment.date}>{comment.date}</time>
-            <p>{comment.review_text}</p>
+            <p><strong>{comment.rating}/5</strong>: {comment.review_text}</p>
           </div>
         </div>
-        {comment.comments && renderComments(comment.comments)}
       </div>
     ));
   };
+
 
   return (
     <div>
@@ -145,7 +173,9 @@ function MenuDetail() {
                 <button 
                   type="button"
                   className="btn btn-primary"
-                  onClick={() => setShowReviewForm(true)}>
+                  onClick={() => {
+                    setCurrentReview(null);
+                    setShowReviewForm(true)}}>
                   Write a Review
                 </button>
               }
@@ -161,6 +191,8 @@ function MenuDetail() {
                   <button type="button"
                   className='btn btn-primary'
                   onClick={() => {
+                    setContentId(currentMenuItem._id)
+                    setContentToDelete("menu-item")
                     setShowDeleteConfirmation(true)
                     }}>
                     Delete Dish
@@ -174,11 +206,10 @@ function MenuDetail() {
         </div>
       </section>
       <Review show={showReviewForm} 
-              handleClose={() => setShowReviewForm(false)} 
-              content_type={"menu-item"}
-              content_id={currentMenuItem ? currentMenuItem._id : 0}
-              reviewer_id={currentUser ? currentUser._id : 0}
-              reviewer_name={currentUser ? currentUser.firstName.concat(" ", currentUser.lastName) : "Dummy Name"}/>
+              handleClose={() => setShowReviewForm(false)}
+              review={currentReview}
+              refresh={() => fetchReviews(iid)} 
+              content_type={"menu-item"}/>
       <ReplyComment show={showReplyForm} handleClose={() => setShowReplyForm(false)} />
       <Confirmation show={showDeleteConfirmation} 
                     handleClose={() => setShowDeleteConfirmation(false)}
