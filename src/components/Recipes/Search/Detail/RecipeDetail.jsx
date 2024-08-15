@@ -23,10 +23,6 @@ function RecipeDetail() {
           getComments(id),
           getCurrentUser()
         ]);
-        console.log('Recipe ID:', id);
-        console.log('Recipe Data:', recipeData);
-        console.log('Comments Data:', commentsData);
-        console.log('User Data:', userData);
         setRecipe(recipeData);
         setComments(commentsData);
         setCurrentUser(userData);
@@ -86,7 +82,7 @@ function RecipeDetail() {
     <div key={comment._id} className={`comment mb-3 p-3 border rounded bg-dark text-white ${isReply ? 'ml-3 smaller-reply-box' : ''}`}>
       <div className="d-flex flex-column">
         <div className="d-flex align-items-start">
-          <div className="mr-2 flex-shrink-0">
+        <div className="mr-2 flex-shrink-0">
             <Link to={`/profile/${comment.userId}`} className="text-decoration-none">
               <div className="profile-picture mb-2">
                 <div className="bg-secondary rounded-circle text-white" style={{width: '50px', height: '50px', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>

@@ -5,29 +5,25 @@ import { setCurrentUser } from '../reducer';
 import { useDispatch } from 'react-redux';
 function Register({ show, handleClose }) {
   
-  const [formData, setFormData] = useState<any>({
+  const [user, setUser] = useState<any>({
     firstName: '',
     lastName: '',
+    username: '',
     email: '',
     password: '',
     role: 'User'
   });
+  const [error, setError] = useState("");
   const dispatch = useDispatch();
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {  
-      const currentUser = await client.signup(formData);
-      dispatch(setCurrentUser(currentUser));
-    } catch (err: any) {
-      console.log(err.response.data.message);
-    };
-    handleClose()
+  const handleRegister = async () => {
+      try {  
+          const currentUser = await client.signup(user);
+          dispatch(setCurrentUser(currentUser));
+          handleClose()
+      } catch (err: any) {
+        setError(err.response.data.message);
+      };
   };
 
   return (
@@ -36,57 +32,55 @@ function Register({ show, handleClose }) {
         <Modal.Title>Sign up now</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <Form onSubmit={handleSubmit}>
+        <Form>
           <div className="row">
             <div className="col-md-6 mb-4">
               <Form.Group controlId="form3Example1" className="form-outline">
                 <Form.Label>First name</Form.Label>
-                <Form.Control 
-                  type="text" 
-                  name="firstName"
-                  value={formData.firstName} 
-                  onChange={handleChange}/>
+                <Form.Control type="text" value={user.firstName} onChange={(e) => (
+                    setUser({...user, firstName: e.target.value})
+                )}/>
               </Form.Group>
             </div>
             <div className="col-md-6 mb-4">
               <Form.Group controlId="form3Example2" className="form-outline">
                 <Form.Label>Last name</Form.Label>
-                <Form.Control 
-                  type="text" 
-                  name="lastName"
-                  value={formData.lastName} 
-                  onChange={handleChange}/>
+                <Form.Control type="text" value={user.lastName} onChange={(e) => (
+                    setUser({...user, lastName: e.target.value})
+                )}/>
               </Form.Group>
             </div>
           </div>
+          <Form.Group controlId="form3Example6" className="form-outline mb-4">
+            <Form.Label>Username</Form.Label>
+            <Form.Control type="username" value={user.username} onChange={(e) => (
+                 setUser({...user, username: e.target.value})
+            )}/>
+          </Form.Group>
           <Form.Group controlId="form3Example3" className="form-outline mb-4">
             <Form.Label>Email address</Form.Label>
-            <Form.Control 
-              type="email" 
-              name="email" 
-              value={formData.email} 
-              onChange={handleChange}/>
+            <Form.Control type="email" value={user.email} onChange={(e) => (
+                 setUser({...user, email: e.target.value})
+            )}/>
           </Form.Group>
           <Form.Group controlId="form3Example4" className="form-outline mb-4">
             <Form.Label>Password</Form.Label>
-            <Form.Control 
-              type="password" 
-              name="password"
-              value={formData.password} 
-              onChange={handleChange}/>
+            <Form.Control type="password" value={user.password} onChange={(e) => (
+                setUser({...user, password: e.target.value})
+            )}/>
           </Form.Group>
           <Form.Group controlId="form3Example5" className="form-outline mb-4">
             <Form.Label>Choose your role</Form.Label>
-            <Form.Control 
-              as="select"
-              value={formData.role} onChange={handleChange}>
+            <Form.Control as="select" value={user.role} onChange={(e) => (
+                setUser({...user, role: e.target.value})
+            )}>
               <option>User</option>
               <option>Chef</option>
               <option>Owner</option>
             </Form.Control>
           </Form.Group>
           
-          <Button variant="primary" type="button" className="btn btn-block mb-4" onClick={handleSubmit}>
+          <Button variant="primary" type="button" className="btn btn-block mb-4" onClick={handleRegister}>
             Sign up
           </Button>
          
