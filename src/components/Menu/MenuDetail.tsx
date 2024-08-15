@@ -159,7 +159,12 @@ function MenuDetail() {
             <div className="col-lg-6">
               <div className="chef-info">
                 <img src={`${process.env.PUBLIC_URL}/assets/img/generic/generic_user.jpg`} className="chef-img" alt="Chef" />
-                <h3>{currentMenuItem && currentMenuItem.chef_name}</h3>
+                
+                { (currentMenuItem && currentUser && currentUser._id === currentMenuItem.chef_id) ?
+                  <Link to={`/profile`}><h3>{ currentMenuItem && currentMenuItem.chef_name}</h3></Link> :
+                  <Link to={`/profile/${currentMenuItem && currentMenuItem.chef_id}`}><h3>{ currentMenuItem && currentMenuItem.chef_name}</h3></Link> 
+                }
+
                 <p>{currentMenuItem && currentMenuItem.chefs_intro}</p>
                 <Link to={`/menu/${rid}`} className="btn btn-primary mt-3">View Full Menu</Link>
               </div>

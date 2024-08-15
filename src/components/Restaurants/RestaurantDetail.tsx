@@ -15,6 +15,8 @@ import { setReviews, deleteReview } from '../Review/reducer';
 import Confirmation from '../Confirmation';
 import { deleteRestaurant, setCurrentRestaurant } from './reducer';
 import { setUsers } from '../Account/reducer'
+import OtherProfile from '../Profile/OtherProfile';
+import SelfProfile from "../Profile/SelfProfile";
 import Add from "./Add";
 
 function RestaurantDetail() {
@@ -167,7 +169,12 @@ function RestaurantDetail() {
             <div className="col-lg-6">
               <div className="owner-info">
                 <img src={`${process.env.PUBLIC_URL}/assets/img/generic/generic_user.jpg`} className="owner-img" alt="Owner" />
-                <h3>{ currentRestaurant && currentRestaurant.owner}</h3>
+
+                { (currentRestaurant && currentUser && currentUser._id === currentRestaurant.owner_id) ?
+                  <Link to={`/profile`}><h3>{ currentRestaurant && currentRestaurant.owner}</h3></Link> :
+                  <Link to={`/profile/${currentRestaurant && currentRestaurant.owner_id}`}><h3>{ currentRestaurant && currentRestaurant.owner}</h3></Link> 
+                }
+
                 <p>{ currentRestaurant && currentRestaurant.introduction}</p>
                 <Link to={`/restaurants/${rid}/menu/`} className="btn btn-primary mt-3">Check the Menu</Link>
               </div>
