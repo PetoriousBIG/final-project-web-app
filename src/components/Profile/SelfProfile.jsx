@@ -19,8 +19,15 @@ function SelfProfile() {
   const [recentComments, setRecentComments] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [user, setUser] = useState(null);
+
+  const fetchUserDetails = async (id) => {
+      const userData = await client.getUserDetails(id);
+      setUser(userData)
+  }
 
   useEffect(() => {
+    fetchUserDetails(currentUser._id)
     const fetchRecentComments = async () => {
       if (currentUser && currentUser._id) {
         setIsLoading(true);
@@ -55,10 +62,10 @@ function SelfProfile() {
     };
 
     fetchRecentComments();
-  }, [currentUser]);
+  }, []);
 
   const goToEditPage = () => {
-    navigate(`/profile-edit-${currentUser.role}`);
+    navigate(`/profile-edit-${user.role}`);
   }
 
   const handleCommentClick = (recipeId) => {
@@ -84,17 +91,17 @@ function SelfProfile() {
               <img src={`${process.env.PUBLIC_URL}/assets/img/generic/generic_user.jpg`} className="img-fluid" alt="Profile" />
             </div>
             <div className="col-lg-8 content">
-              <h2>{currentUser.firstName} {currentUser.lastName}&nbsp;</h2>
-              <p className="fst-italic py-3">{currentUser.role}</p>
+              <h2>{user && user.firstName} { user && user.lastName}&nbsp;</h2>
+              <p className="fst-italic py-3">{user && user.role}</p>
               <div className="row">
                 <div className="col-lg-6">
                   <ul>
-                    <li><i className="bi bi-chevron-right" /> <strong>Phone:</strong> <span>{currentUser.phone}</span></li>
+                    <li><i className="bi bi-chevron-right" /> <strong>Phone:</strong> <span>{user && user.phone}</span></li>
                   </ul>
                 </div>
                 <div className="col-lg-6">
                   <ul>
-                    <li><i className="bi bi-chevron-right" /> <strong>Email:</strong> <span>{currentUser.email}</span></li>
+                    <li><i className="bi bi-chevron-right" /> <strong>Email:</strong> <span>{user && user.email}</span></li>
                   </ul>
                 </div>
               </div>
@@ -102,7 +109,7 @@ function SelfProfile() {
                 <br />
                 <h2>About&nbsp;</h2>
                 <p className="py-3">
-                  {currentUser.bio}
+                  {user && user.bio}
                 </p>
                 <br />
                 <br />
@@ -115,11 +122,11 @@ function SelfProfile() {
       </section>
 
       {/* Conditional Rendering Based on Role */}
-      {currentUser.role === 'User' && (
+      {user && user.role === 'User' && (
         <>
          <section id="recent-comments" className="recent-comments section" style={{ backgroundColor: '#1a1a1a', color: '#fff', padding: '50px 0' }}>
             <div className="container section-title" data-aos="fade-up">
-              <h2 style={{ color: '#d4af37' }}>{currentUser.username.toUpperCase()}</h2>
+              <h2 style={{ color: '#d4af37' }}>{user && user.username.toUpperCase()}</h2>
               <p style={{ color: '#d4af37', fontSize: '2.5rem', marginBottom: '30px' }}>Recent Comments</p>
             </div>
             <div className="container" data-aos="fade-up" data-aos-delay={100}>
@@ -238,10 +245,10 @@ function SelfProfile() {
         </>
       )}
 
-      {currentUser.role === 'Owner' && (
+      {user && user.role === 'Owner' && (
         <section id=".recent-review" className=".recent-review section">
           <div className="container section-title" data-aos="fade-up">
-            <h2>Restaurants Owned by {currentUser.firstName} {currentUser.lastName}</h2>
+            <h2>Restaurants Owned by {user && user.firstName} {user && user.lastName}</h2>
             <p>Restaurants You Own</p>
           </div>
           <div className="container" data-aos="fade-up" data-aos-delay={100}>
@@ -297,7 +304,7 @@ function SelfProfile() {
         </section>
       )}
 
-      {currentUser.role === 'Chef' && (
+      {user && user.role === 'Chef' && (
         <section id=".recent-review" className=".recent-review section">
           <div className="container section-title" data-aos="fade-up">
             <h2>Your Dishes</h2>
