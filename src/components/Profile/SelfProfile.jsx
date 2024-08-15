@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router';
+import { Navigate } from 'react-router-dom';
 import 'swiper/css';
 import 'swiper/css/pagination';
 import 'swiper/css/navigation';
@@ -42,7 +43,6 @@ function SelfProfile() {
               }
             })
           );
-        
           setRecentComments(commentsWithRecipes);
         } catch (error) {
           console.error("Error fetching recent comments:", error);
@@ -64,7 +64,12 @@ function SelfProfile() {
     const fullRecipeId = `http://www.edamam.com/ontologies/edamam.owl#${recipeId}`;
     navigate(`/recipe/${encodeURIComponent(fullRecipeId)}`);  
   };
-
+  
+  // Check if user is logged in
+  if (!currentUser) {
+    return <Navigate to="/login" />;
+  }
+  
   return (
     <div>
       <section id="about" className="about section">
