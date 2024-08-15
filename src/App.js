@@ -56,7 +56,7 @@ function App() {
               <Route path="/profile" element={<ProtectedRoute><SelfProfile /></ProtectedRoute>} />
         
               {/* Route for viewing another user's profile */}
-              <Route path="/profile/:id" element={<ProtectedRoute><OtherProfile /></ProtectedRoute>} />
+              <Route path="/profile/:id" element={<OtherProfile />} />
 
               
               <Route path="/profile-edit-chef" element={<ProtectedRoute><ProfileEditChef /></ProtectedRoute> } />
