@@ -13,7 +13,7 @@ const Add = ({show, handleClose, refresh, users, editing, owner, owner_id}) => {
       const state = editing ? currentRestaurant : 
       {owner: owner, owner_id: owner_id, description: "", introduction: "", name: "", rating: 0, chef_ids: []} 
       setRestaurant(state)
-    })
+    }, [currentRestaurant])
 
     const handleSubmit = async () => {
         try {
@@ -72,7 +72,7 @@ const Add = ({show, handleClose, refresh, users, editing, owner, owner_id}) => {
                 onChange={(e) => { 
                         const target = e.target
                         let value = Array.from(target.selectedOptions, option => option.value)
-                        setRestaurant({...restaurant, chefs: value})
+                        setRestaurant({...restaurant, chef_ids: value})
                     }}> 
                   {users.map((user) => (
                     <option value={user._id}> {user.firstName} {user.lastName} </option> 
